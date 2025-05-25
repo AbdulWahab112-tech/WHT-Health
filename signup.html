@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 4rem;
+      line-height: 1.1;
+      margin-top: -2rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 14px 28px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 10px;
+    }
+    .neon-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(192,192,192,0.4), transparent);
+      transition: 0.5s;
+    }
+    .neon-button:hover::before {
+      left: 100%;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 80px 20px 60px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+    }
+    .input-field {
+      margin-bottom: 1.5rem;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      background-color: transparent;
+      color: #fff;
+      font-size: 18px;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #c0c0c0;
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #c0c0c0;
+      font-size: 16px;
+      text-decoration: none;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .back-button:hover {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .animate-buttons {
+      margin-top: 2rem;
+    }
+    select.input-field {
+      background-color: #000;
+      color: #fff;
+      border: 2px solid #c0c0c0;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 30px;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23c0c0c0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    select.input-field option {
+      background-color: #000;
+      color: #fff;
+    }
+    select.input-field option[disabled] {
+      color: #888;
+    }
+    select.input-field:focus {
+      outline: none;
+      border-color: #c0c0c0;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+  </style>
+</head>
+<body>
+  <a href="index.html" class="back-button">← Back</a>
+
+  <!-- Main Content -->
+  <section class="section">
+    <h1 class="gradient-text animate-title">SIGN UP</h1>
+    <form class="w-full max-w-lg" id="signup-form">
+      <input type="text" placeholder="Full Name" class="input-field" name="fullName" required />
+      <input type="text" placeholder="Username" class="input-field" name="username" required />
+      <input type="email" placeholder="Email Address" class="input-field" name="email" required />
+      <input type="password" placeholder="Password" class="input-field" name="password" required />
+      <select class="input-field" name="userType" id="userTypeSelect" required>
+        <option value="" disabled selected>Select User Type</option>
+        <option value="Doctor">Doctor</option>
+        <option value="Admin">Admin</option>
+        <option value="Nurse">Nurse</option>
+        <option value="Polyclinic Receptionist">Polyclinic Receptionist</option>
+        <option value="Hospital Receptionist">Hospital Receptionist</option>
+      </select>
+      <div class="animate-buttons">
+        <button type="submit" class="neon-button">Sign Up</button>
+      </div>
+    </form>
+    <p class="text-gray-300 mt-4">Already have an account? <a href="login.html" class="gradient-text">Login</a></p>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    // Simulated Backend
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+
+    function saveUsers() {
+      localStorage.setItem('users', JSON.stringify(users));
+    }
+
+    function showMessage(message, isSuccess = true) {
+      const msg = document.createElement('p');
+      msg.textContent = message;
+      msg.style.color = isSuccess ? '#c0c0c0' : 'red';
+      msg.style.marginTop = '1rem';
+      document.querySelector('.section').appendChild(msg);
+      setTimeout(() => msg.remove(), 3000);
+    }
+
+    // GSAP Animations for Main Content
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      scale: 0.9,
+      duration: 1.5,
+      ease: "power4.out",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+    gsap.from(".animate-buttons", {
+      opacity: 0,
+      scale: 0.9,
+      duration: 1.2,
+      delay: 1,
+      ease: "elastic.out(1, 0.4)",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+
+    // Dropdown Animation
+    const userTypeSelect = document.getElementById('userTypeSelect');
+    userTypeSelect.addEventListener('focus', () => {
+      gsap.to(userTypeSelect, {
+        boxShadow: '0 0 20px #c0c0c0',
+        duration: 0.5,
+        ease: 'power2.out'
+      });
+    });
+    userTypeSelect.addEventListener('blur', () => {
+      gsap.to(userTypeSelect, {
+        boxShadow: '0 0 10px rgba(192, 192, 192, 0.5)',
+        duration: 0.5,
+        ease: 'power2.out'
+      });
+    });
+
+    // Signup Form Handling
+    document.getElementById('signup-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const user = {
+        fullName: formData.get('fullName'),
+        username: formData.get('username'),
+        email: formData.get('email'),
+        password: formData.get('password'),
+        userType: formData.get('userType')
+      };
+      if (users.find(u => u.email === user.email)) {
+        showMessage('Email already exists', false);
+        return;
+      }
+      users.push(user);
+      saveUsers();
+      showMessage('Signup successful! Redirecting to login...');
+      setTimeout(() => window.location.href = 'login.html', 2000);
+    });
+  </script>
+</body>
+</html>

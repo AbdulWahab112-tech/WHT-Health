@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Write Nurse Notes - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .search-container {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #c0c0c0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .form-input {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #c0c0c0;
+      border-radius: 5px;
+      color: white;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: #ffffff;
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+    .notes-container {
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid #c0c0c0;
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
+    }
+    .btn {
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-weight: bold;
+    }
+    .btn:hover {
+      background: rgba(192, 192, 192, 0.1);
+      box-shadow: 0 0 20px #c0c0c0;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #c0c0c0;
+      text-decoration: none;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    textarea {
+      min-height: 200px;
+      resize: vertical;
+    }
+  </style>
+</head>
+<body>
+  <a href="nurse-dashboard.html" class="back-button">← Back</a>
+  
+  <div class="container">
+    <h1>Write Nurse Notes</h1>
+
+    <div class="search-container">
+      <input type="text" id="patientSearch" placeholder="Search patient by ID or bed number..." class="form-input">
+      <button onclick="searchPatient()" class="btn mt-4">Search Patient</button>
+    </div>
+
+    <div class="notes-container" id="patientInfo" style="display: none;">
+      <h2 class="text-xl mb-4">Patient Information</h2>
+      <div class="grid grid-cols-2 gap-4 mb-4">
+        <div>
+          <p>Patient ID: <span id="patientId">-</span></p>
+          <p>Name: <span id="patientName">-</span></p>
+        </div>
+        <div>
+          <p>Bed Number: <span id="bedNumber">-</span></p>
+          <p>Ward: <span id="wardName">-</span></p>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <h3 class="text-lg mb-2">Previous Notes</h3>
+        <div id="previousNotes" class="bg-black bg-opacity-50 p-4 rounded mb-4" style="max-height: 200px; overflow-y: auto;">
+          <!-- Previous notes will be loaded here -->
+        </div>
+
+        <h3 class="text-lg mb-2">Add New Note</h3>
+        <textarea id="newNote" placeholder="Enter your progress notes here..." class="form-input"></textarea>
+        
+        <div class="flex justify-between mt-4">
+          <button onclick="saveNote()" class="btn">Save Note</button>
+          <button onclick="clearForm()" class="btn">Clear Form</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+    });
+
+    function searchPatient() {
+      const searchInput = document.getElementById('patientSearch').value;
+      if (!searchInput) {
+        alert('Please enter a patient ID or bed number');
+        return;
+      }
+
+      // In a real application, this would make an API call to search for the patient
+      // For demo purposes, we'll just show the form
+      document.getElementById('patientInfo').style.display = 'block';
+      
+      // Simulate loading previous notes
+      loadPreviousNotes();
+    }
+
+    function loadPreviousNotes() {
+      // In a real application, this would load actual notes from the database
+      const previousNotes = document.getElementById('previousNotes');
+      previousNotes.innerHTML = `
+        <div class="mb-3 p-2 border-b border-gray-600">
+          <div class="text-gray-400">Date: 2024-02-20 10:30 AM</div>
+          <div>Patient showing improvement in vital signs. Medication administered as scheduled.</div>
+        </div>
+        <div class="mb-3 p-2">
+          <div class="text-gray-400">Date: 2024-02-19 8:45 PM</div>
+          <div>Patient resting comfortably. No complaints of pain.</div>
+        </div>
+      `;
+    }
+
+    function saveNote() {
+      const newNote = document.getElementById('newNote').value;
+      if (!newNote) {
+        alert('Please enter a note before saving');
+        return;
+      }
+
+      // In a real application, this would save to the database
+      alert('Note saved successfully!');
+      document.getElementById('newNote').value = '';
+      loadPreviousNotes(); // Reload notes to show the new one
+    }
+
+    function clearForm() {
+      document.getElementById('newNote').value = '';
+    }
+  </script>
+</body>
+</html> 

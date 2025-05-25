@@ -1,0 +1,35 @@
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.85) !important;
+  border: 2px solid #c0c0c0;
+  border-radius: 8px;
+  color: #fff;
+  transition: all 0.3s ease;
+}
+.form-input:focus {
+  outline: none;
+  box-shadow: 0 0 15px #c0c0c0;
+}
+select.form-input {
+  background: #000 !important;
+  color: #fff !important;
+  appearance: none;
+  padding-right: 30px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23c0c0c0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+}
+select.form-input option {
+  background-color: #000;
+  color: #fff;
+}
+input[type="date"].form-input,
+input[type="time"].form-input {
+  background: #000 !important;
+  color: #fff !important;
+}
+input[type="date"].form-input::-webkit-calendar-picker-indicator,
+input[type="time"].form-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+} 

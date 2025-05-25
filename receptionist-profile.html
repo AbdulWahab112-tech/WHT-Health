@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Receptionist Profile - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .profile-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      padding-top: 120px;
+    }
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+    }
+    .profile-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(5px);
+      text-align: center;
+    }
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      margin: 0 auto 1.5rem;
+      border: 3px solid #c0c0c0;
+      overflow: hidden;
+      position: relative;
+    }
+    .profile-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .profile-image:hover .upload-overlay {
+      opacity: 1;
+    }
+    .upload-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      cursor: pointer;
+    }
+    .form-container {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(5px);
+    }
+    .form-section {
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+    /* Add styles for date/time inputs */
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    select {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 8px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator,
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  </style>
+</head>
+<body>
+  <a href="polyclinic-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="profile-container">
+    <h1 class="gradient-text animate-title text-center">MY PROFILE</h1>
+
+    <div class="profile-grid">
+      <!-- Profile Card -->
+      <div>
+        <div class="profile-card">
+          <div class="profile-image">
+            <img id="profileImage" src="default-avatar.png" alt="Profile Picture">
+            <div class="upload-overlay" onclick="document.getElementById('imageUpload').click()">
+              <span class="gradient-text">Change Photo</span>
+            </div>
+            <input type="file" id="imageUpload" hidden accept="image/*">
+          </div>
+          <h2 class="gradient-text text-2xl mb-2" id="profileName">Loading...</h2>
+          <p class="mb-4" id="profileRole">Receptionist</p>
+          <p class="mb-2" id="profileEmail">Loading...</p>
+          <p id="profilePhone">Loading...</p>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <p class="gradient-text">Appointments</p>
+              <p class="stat-value" id="appointmentsCount">0</p>
+              <p>Managed Today</p>
+            </div>
+            <div class="stat-card">
+              <p class="gradient-text">Patients</p>
+              <p class="stat-value" id="patientsCount">0</p>
+              <p>Registered Today</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit Profile Form -->
+      <div class="form-container">
+        <h2 class="gradient-text text-xl mb-4">Edit Profile</h2>
+        <form id="profile-form">
+          <div class="form-section">
+            <div class="form-group">
+              <label for="fullName" class="form-label">Full Name</label>
+              <input type="text" id="fullName" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" id="email" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="phone" class="form-label">Phone Number</label>
+              <input type="tel" id="phone" class="form-input" required>
+            </div>
+
+            <div class="form-group">
+              <label for="address" class="form-label">Address</label>
+              <textarea id="address" class="form-input" rows="3"></textarea>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3 class="gradient-text text-lg mb-3">Change Password</h3>
+            <div class="form-group">
+              <label for="currentPassword" class="form-label">Current Password</label>
+              <input type="password" id="currentPassword" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label for="newPassword" class="form-label">New Password</label>
+              <input type="password" id="newPassword" class="form-input">
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword" class="form-label">Confirm New Password</label>
+              <input type="password" id="confirmPassword" class="form-input">
+            </div>
+          </div>
+
+          <button type="submit" class="neon-button">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    // Load user profile
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+      window.location.href = 'index.html';
+    }
+
+    // Update profile display
+    document.getElementById('profileName').textContent = currentUser.fullName;
+    document.getElementById('profileEmail').textContent = currentUser.email;
+    document.getElementById('profilePhone').textContent = currentUser.phone || 'No phone number';
+
+    // Load form data
+    document.getElementById('fullName').value = currentUser.fullName;
+    document.getElementById('email').value = currentUser.email;
+    document.getElementById('phone').value = currentUser.phone || '';
+    document.getElementById('address').value = currentUser.address || '';
+
+    // Handle profile image upload
+    document.getElementById('imageUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profileImage').src = e.target.result;
+          // Save image to localStorage (you might want to use a proper storage solution in production)
+          localStorage.setItem('profileImage_' + currentUser.email, e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Load saved profile image
+    const savedImage = localStorage.getItem('profileImage_' + currentUser.email);
+    if (savedImage) {
+      document.getElementById('profileImage').src = savedImage;
+    }
+
+    // Update statistics
+    function updateStats() {
+      const today = new Date().toDateString();
+      
+      // Count today's appointments
+      const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+      const todayAppointments = appointments.filter(apt => 
+        new Date(apt.createdAt).toDateString() === today
+      ).length;
+      document.getElementById('appointmentsCount').textContent = todayAppointments;
+
+      // Count today's registered patients
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const todayPatients = patients.filter(patient => 
+        new Date(patient.registrationDate).toDateString() === today
+      ).length;
+      document.getElementById('patientsCount').textContent = todayPatients;
+    }
+
+    // Handle form submission
+    document.getElementById('profile-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const currentPassword = document.getElementById('currentPassword').value;
+
+      if (newPassword || confirmPassword || currentPassword) {
+        if (newPassword !== confirmPassword) {
+          alert('New passwords do not match!');
+          return;
+        }
+        if (currentPassword !== currentUser.password) {
+          alert('Current password is incorrect!');
+          return;
+        }
+      }
+
+      // Update user data
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const userIndex = users.findIndex(user => user.email === currentUser.email);
+
+      if (userIndex !== -1) {
+        users[userIndex] = {
+          ...users[userIndex],
+          fullName: document.getElementById('fullName').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          address: document.getElementById('address').value,
+          ...(newPassword && { password: newPassword })
+        };
+
+        localStorage.setItem('users', JSON.stringify(users));
+        localStorage.setItem('currentUser', JSON.stringify(users[userIndex]));
+
+        alert('Profile updated successfully!');
+        window.location.reload();
+      }
+    });
+
+    // Initial load
+    updateStats();
+
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".profile-grid", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+
+    gsap.from(".stats-grid", {
+      opacity: 0,
+      scale: 0.8,
+      duration: 0.8,
+      delay: 0.5,
+      ease: "power3.out",
+      stagger: 0.2
+    });
+  </script>
+</body>
+</html> 

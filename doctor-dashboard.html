@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Dashboard - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 80px 20px 40px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem 1rem;
+      text-align: center;
+      box-shadow: 0 0 10px #222;
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+    .stat-label {
+      color: #c0c0c0;
+      font-size: 1rem;
+    }
+    .nav-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .nav-card {
+      background: rgba(0, 0, 0, 0.85);
+      border: 2px solid #c0c0c0;
+      border-radius: 12px;
+      padding: 1.5rem 1rem;
+      text-align: center;
+      transition: box-shadow 0.3s, background 0.3s;
+      cursor: pointer;
+    }
+    .nav-card:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.08);
+    }
+    .nav-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.5rem;
+      color: #c0c0c0;
+    }
+    .nav-label {
+      font-size: 1.1rem;
+      font-weight: bold;
+      color: #fff;
+    }
+    .logout-btn {
+      margin: 2rem auto 0;
+      display: block;
+      width: 220px;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .logout-btn:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .profile-button {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      color: #c0c0c0;
+      font-size: 16px;
+      text-decoration: none;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .profile-button:hover {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Doctor Dashboard</h1>
+    <a href="doctor-profile.html" class="profile-button">Profile</a>
+    <div class="dashboard-grid">
+      <div class="stat-card">
+        <div class="stat-value" id="todayAppointments">0</div>
+        <div class="stat-label">Today's Appointments</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="myPatients">0</div>
+        <div class="stat-label">My Patients</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="pendingHospitalizations">0</div>
+        <div class="stat-label">Pending Hospitalizations</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="emergencyCases">0</div>
+        <div class="stat-label">Emergency Cases</div>
+      </div>
+    </div>
+    <div class="nav-section" style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 2rem;">
+      <a href="doctor-appointments.html" class="nav-card">
+        <div class="nav-icon">📅</div>
+        <div class="nav-label">Appointments</div>
+      </a>
+      <a href="doctor-patient-records.html" class="nav-card">
+        <div class="nav-icon">📋</div>
+        <div class="nav-label">Patient Records</div>
+      </a>
+      <a href="doctor-hospitalization.html" class="nav-card">
+        <div class="nav-icon">🏥</div>
+        <div class="nav-label">Hospitalization Requests</div>
+      </a>
+      <a href="doctor-progress-notes.html" class="nav-card">
+        <div class="nav-icon">📝</div>
+        <div class="nav-label">Progress Notes</div>
+      </a>
+      <a href="doctor-emergency.html" class="nav-card">
+        <div class="nav-icon">🚨</div>
+        <div class="nav-label">Emergency Entries</div>
+      </a>
+      <a href="doctor-timetable.html" class="nav-card">
+        <div class="nav-icon">🕒</div>
+        <div class="nav-label">My Timetable</div>
+      </a>
+    </div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+  </div>
+  <script>
+    // Calculate and display today's appointments for the logged-in doctor
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    let doctorId = '';
+    if (loggedInUser && loggedInUser.id) {
+      doctorId = loggedInUser.id;
+    }
+    let todayCount = 0;
+    if (doctorId) {
+      const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+      const today = new Date().toISOString().split('T')[0];
+      todayCount = appointments.filter(a => a.doctorId === doctorId && a.date === today && a.status === 'Scheduled').length;
+    }
+    document.getElementById('todayAppointments').textContent = todayCount;
+    document.getElementById('myPatients').textContent = localStorage.getItem('doctorMyPatients') || 0;
+    document.getElementById('pendingHospitalizations').textContent = localStorage.getItem('doctorPendingHospitalizations') || 0;
+    document.getElementById('emergencyCases').textContent = localStorage.getItem('doctorEmergencyCases') || 0;
+
+    // Logout functionality
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+      localStorage.removeItem('loggedInUser');
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

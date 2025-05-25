@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Schedule - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .schedule-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      padding-top: 80px;
+    }
+    .doctor-select {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      margin-bottom: 2rem;
+      transition: all 0.3s ease;
+    }
+    .doctor-select:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .calendar {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(5px);
+    }
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .calendar-nav {
+      display: flex;
+      gap: 1rem;
+    }
+    .nav-button {
+      padding: 5px 15px;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .nav-button:hover {
+      box-shadow: 0 0 10px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 1rem;
+    }
+    .calendar-day {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      min-height: 150px;
+    }
+    .calendar-day.today {
+      border: 2px solid #4CAF50;
+      background: rgba(76, 175, 80, 0.1);
+    }
+    .day-header {
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid #c0c0c0;
+    }
+    .schedule-item {
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+    .schedule-item.morning {
+      border-left: 3px solid #4CAF50;
+    }
+    .schedule-item.afternoon {
+      border-left: 3px solid #2196F3;
+    }
+    .schedule-item.evening {
+      border-left: 3px solid #9C27B0;
+    }
+    .legend {
+      display: flex;
+      gap: 2rem;
+      margin-top: 1.5rem;
+      justify-content: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+    .legend-color.morning { background: #4CAF50; }
+    .legend-color.afternoon { background: #2196F3; }
+    .legend-color.evening { background: #9C27B0; }
+    /* Add styles for date/time inputs */
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    select {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 8px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator,
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  </style>
+</head>
+<body>
+  <a href="polyclinic-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="schedule-container">
+    <h1 class="gradient-text animate-title text-center">DOCTOR SCHEDULE</h1>
+
+    <select id="doctorSelect" class="doctor-select">
+      <option value="">Select a doctor</option>
+    </select>
+
+    <div class="calendar">
+      <div class="calendar-header">
+        <div class="calendar-nav">
+          <button class="nav-button" onclick="previousWeek()">← Previous Week</button>
+          <button class="nav-button" onclick="nextWeek()">Next Week →</button>
+        </div>
+        <h2 class="gradient-text" id="currentWeek"></h2>
+      </div>
+
+      <div class="calendar-grid" id="calendarGrid">
+        <!-- Calendar days will be populated here -->
+      </div>
+
+      <div class="legend">
+        <div class="legend-item">
+          <div class="legend-color morning"></div>
+          <span>Morning (8 AM - 12 PM)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color afternoon"></div>
+          <span>Afternoon (1 PM - 5 PM)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color evening"></div>
+          <span>Evening (6 PM - 10 PM)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    // Load doctors
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const doctors = users.filter(user => user.userType === 'Doctor');
+    const doctorSelect = document.getElementById('doctorSelect');
+    
+    doctors.forEach(doctor => {
+      const option = document.createElement('option');
+      option.value = doctor.email;
+      option.textContent = `Dr. ${doctor.fullName} - ${doctor.specialization || 'General'}`;
+      doctorSelect.appendChild(option);
+    });
+
+    // Calendar management
+    let currentDate = new Date();
+    let selectedDoctor = null;
+
+    function getWeekDates(date) {
+      const week = [];
+      const start = new Date(date);
+      start.setDate(start.getDate() - start.getDay());
+
+      for (let i = 0; i < 7; i++) {
+        week.push(new Date(start));
+        start.setDate(start.getDate() + 1);
+      }
+      return week;
+    }
+
+    function formatDate(date) {
+      return date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric'
+      });
+    }
+
+    function updateCalendar() {
+      const weekDates = getWeekDates(currentDate);
+      const calendarGrid = document.getElementById('calendarGrid');
+      calendarGrid.innerHTML = '';
+
+      // Update week display
+      const firstDay = weekDates[0];
+      const lastDay = weekDates[6];
+      document.getElementById('currentWeek').textContent = `${formatDate(firstDay)} - ${formatDate(lastDay)}`;
+
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      const today = new Date().toDateString();
+
+      weekDates.forEach((date, index) => {
+        const dayElement = document.createElement('div');
+        dayElement.className = `calendar-day ${date.toDateString() === today ? 'today' : ''}`;
+
+        const header = document.createElement('div');
+        header.className = 'day-header';
+        header.innerHTML = `
+          <div class="gradient-text font-bold">${days[index]}</div>
+          <div>${formatDate(date)}</div>
+        `;
+        dayElement.appendChild(header);
+
+        // Add schedule items if doctor is selected
+        if (selectedDoctor) {
+          const schedule = JSON.parse(localStorage.getItem('doctorSchedule')) || {};
+          const doctorSchedule = schedule[selectedDoctor.email] || {};
+          const daySchedule = doctorSchedule[date.toDateString()] || {};
+
+          ['morning', 'afternoon', 'evening'].forEach(shift => {
+            if (daySchedule[shift]) {
+              const item = document.createElement('div');
+              item.className = `schedule-item ${shift}`;
+              item.textContent = daySchedule[shift];
+              dayElement.appendChild(item);
+            }
+          });
+        }
+
+        calendarGrid.appendChild(dayElement);
+      });
+
+      // Animate calendar items
+      gsap.from(".calendar-day", {
+        opacity: 0,
+        y: 20,
+        duration: 0.5,
+        stagger: 0.1,
+        ease: "power3.out"
+      });
+    }
+
+    function previousWeek() {
+      currentDate.setDate(currentDate.getDate() - 7);
+      updateCalendar();
+    }
+
+    function nextWeek() {
+      currentDate.setDate(currentDate.getDate() + 7);
+      updateCalendar();
+    }
+
+    // Handle doctor selection
+    doctorSelect.addEventListener('change', function() {
+      const doctorEmail = this.value;
+      selectedDoctor = doctors.find(d => d.email === doctorEmail);
+      updateCalendar();
+    });
+
+    // Initial calendar display
+    updateCalendar();
+
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".calendar", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+
+    gsap.from(".legend", {
+      opacity: 0,
+      y: 20,
+      duration: 0.8,
+      delay: 0.5,
+      ease: "power3.out"
+    });
+  </script>
+</body>
+</html> 

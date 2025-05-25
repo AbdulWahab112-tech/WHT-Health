@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patient Progress - Nurse</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body { background: #000 url('wahab.png') center/cover no-repeat fixed; color: #fff; font-family: Arial, sans-serif; min-height: 100vh; margin: 0; padding: 80px 20px 40px; }
+    .container { max-width: 1100px; margin: 0 auto; background: rgba(0,0,0,0.85); border: 2px solid #c0c0c0; border-radius: 15px; padding: 2rem; }
+    h1 { font-family: 'Lovelo', sans-serif; font-size: 2rem; background: linear-gradient(45deg, #c0c0c0, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-align: center; }
+    .patient-list { margin-top: 2rem; }
+    .patient-card { background: rgba(255,255,255,0.05); border: 1px solid #c0c0c0; border-radius: 10px; padding: 1.2rem; margin-bottom: 1.5rem; }
+    .patient-header { font-weight: bold; color: #c0c0c0; font-size: 1.1rem; margin-bottom: 0.5rem; }
+    .notes-list { margin-top: 0.7rem; }
+    .note { background: rgba(255,255,255,0.08); border-radius: 7px; padding: 0.7rem; margin-bottom: 0.5rem; border: 1px solid #c0c0c0; }
+    .note-date { color: #c0c0c0; font-size: 0.95rem; }
+    .note-content { color: #fff; margin-top: 0.2rem; }
+    .add-note-form { margin-top: 1rem; }
+    .input-field { width: 100%; padding: 0.6rem; background: rgba(255,255,255,0.1); border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; margin-bottom: 0.7rem; }
+    .input-field:focus { outline: none; box-shadow: 0 0 10px #c0c0c0; }
+    .neon-button { padding: 0.6rem 1.2rem; background: transparent; border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; }
+    .neon-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); }
+    .back-button { position: fixed; top: 20px; left: 20px; color: #fff; text-decoration: none; border: 2px solid #c0c0c0; border-radius: 8px; padding: 10px 20px; font-weight: bold; background: rgba(0,0,0,0.5); transition: all 0.3s; z-index: 1000; }
+    .back-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); }
+  </style>
+</head>
+<body>
+  <a href="nurse-dashboard.html" class="back-button">← Back to Dashboard</a>
+  <div class="container">
+    <h1>Patient Progress</h1>
+    <div class="patient-list" id="patientList"></div>
+  </div>
+  <script>
+    // Get logged-in nurse
+    const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (!loggedInUser || loggedInUser.role !== 'Nurse') {
+      window.location.href = 'login.html';
+    }
+    const nurseWard = loggedInUser.ward;
+    const nurseId = loggedInUser.id;
+    // Get all hospitalized patients in nurse's ward
+    const patients = JSON.parse(localStorage.getItem('patients')) || [];
+    const myPatients = patients.filter(p => p.hospitalized && p.ward === nurseWard);
+    const patientListDiv = document.getElementById('patientList');
+    if (myPatients.length === 0) {
+      patientListDiv.innerHTML = '<div class="patient-card">No hospitalized patients in your ward.</div>';
+    } else {
+      myPatients.forEach(patient => {
+        const card = document.createElement('div');
+        card.className = 'patient-card';
+        card.innerHTML = `
+          <div class="patient-header">${patient.name} (ID: ${patient.id}) - Bed: ${patient.bedNumber || 'N/A'}</div>
+          <div class="notes-list">
+            ${(patient.progressNotes && patient.progressNotes.length > 0) ? patient.progressNotes.map(note => `
+              <div class='note'>
+                <div class='note-date'>${note.date} ${note.time} - <b>${note.nurseName || 'Nurse'}</b></div>
+                <div class='note-content'>${note.note}</div>
+                <div class='note-content' style='color:#c0c0c0;font-size:0.95em;'>Vitals: ${note.vitals || 'N/A'}</div>
+              </div>
+            `).join('') : '<div class="note">No progress notes yet.</div>'}
+          </div>
+          <form class="add-note-form" data-patient-id="${patient.id}">
+            <textarea class="input-field" name="note" placeholder="Add a new progress note..." required></textarea>
+            <input class="input-field" name="vitals" placeholder="Vital Signs (e.g. Temp, BP, HR)" required />
+            <button type="submit" class="neon-button">Add Note</button>
+          </form>
+        `;
+        patientListDiv.appendChild(card);
+      });
+    }
+    // Handle add note form submission
+    document.querySelectorAll('.add-note-form').forEach(form => {
+      form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const patientId = this.getAttribute('data-patient-id');
+        const noteText = this.note.value.trim();
+        const vitalsText = this.vitals.value.trim();
+        if (!noteText || !vitalsText) return;
+        const now = new Date();
+        const note = {
+          date: now.toISOString().split('T')[0],
+          time: now.toTimeString().split(' ')[0],
+          nurseName: loggedInUser.fullName,
+          nurseId: nurseId,
+          note: noteText,
+          vitals: vitalsText,
+          type: 'nurse'
+        };
+        // Add note to patient
+        const patientIdx = patients.findIndex(p => p.id === patientId);
+        if (patientIdx !== -1) {
+          patients[patientIdx].progressNotes = patients[patientIdx].progressNotes || [];
+          patients[patientIdx].progressNotes.push(note);
+          localStorage.setItem('patients', JSON.stringify(patients));
+          window.location.reload();
+        }
+      });
+    });
+  </script>
+</body>
+</html> 

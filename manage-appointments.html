@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Appointments - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .appointment-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .form-container {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(5px);
+    }
+    .appointments-list {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(5px);
+      max-height: 600px;
+      overflow-y: auto;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 10px 0;
+      width: 100%;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .appointment-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    .appointment-card:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+    .appointment-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .action-button {
+      padding: 5px 10px;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .confirm-button { color: #4CAF50; }
+    .reschedule-button { color: #2196F3; }
+    .cancel-button { color: #f44336; }
+    .action-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .filter-button {
+      padding: 8px 16px;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 10px #c0c0c0;
+    }
+  </style>
+</head>
+<body>
+  <a href="receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1 class="gradient-text animate-title">MANAGE APPOINTMENTS</h1>
+
+    <div class="appointment-grid">
+      <!-- New Appointment Form -->
+      <div class="form-container">
+        <h2 class="gradient-text text-xl mb-4">Schedule New Appointment</h2>
+        <form id="appointment-form">
+          <div class="form-group">
+            <label for="patientId" class="form-label">Patient ID</label>
+            <input type="text" id="patientId" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="doctorId" class="form-label">Select Doctor</label>
+            <select id="doctorId" class="form-input" required>
+              <option value="">Select a doctor</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="appointmentDate" class="form-label">Date & Time</label>
+            <input type="text" id="appointmentDate" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="reason" class="form-label">Reason for Visit</label>
+            <textarea id="reason" class="form-input" rows="3" required></textarea>
+          </div>
+
+          <button type="submit" class="neon-button">Schedule Appointment</button>
+        </form>
+      </div>
+
+      <!-- Appointments List -->
+      <div class="appointments-container">
+        <div class="filter-buttons">
+          <button class="filter-button active" data-filter="all">All</button>
+          <button class="filter-button" data-filter="pending">Pending</button>
+          <button class="filter-button" data-filter="confirmed">Confirmed</button>
+          <button class="filter-button" data-filter="completed">Completed</button>
+        </div>
+
+        <div class="appointments-list" id="appointments-list">
+          <!-- Will be populated by JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script>
+    // Initialize date picker
+    flatpickr("#appointmentDate", {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      minDate: "today",
+      time_24hr: true
+    });
+
+    // Load doctors
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const doctors = users.filter(user => user.userType === 'Doctor');
+    const doctorSelect = document.getElementById('doctorId');
+    
+    doctors.forEach(doctor => {
+      const option = document.createElement('option');
+      option.value = doctor.email;
+      option.textContent = `Dr. ${doctor.fullName} - ${doctor.specialization || 'General'}`;
+      doctorSelect.appendChild(option);
+    });
+
+    // Handle appointment form submission
+    document.getElementById('appointment-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const appointment = {
+        id: Date.now().toString(),
+        patientId: document.getElementById('patientId').value,
+        doctorId: document.getElementById('doctorId').value,
+        dateTime: document.getElementById('appointmentDate').value,
+        reason: document.getElementById('reason').value,
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+      appointments.push(appointment);
+      localStorage.setItem('appointments', JSON.stringify(appointments));
+
+      this.reset();
+      loadAppointments('all');
+      showSuccessMessage('Appointment scheduled successfully!');
+    });
+
+    // Load and display appointments
+    function loadAppointments(filter = 'all') {
+      const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+      const appointmentsList = document.getElementById('appointments-list');
+      appointmentsList.innerHTML = '';
+
+      const filteredAppointments = appointments.filter(apt => {
+        if (filter === 'all') return true;
+        return apt.status === filter;
+      });
+
+      filteredAppointments.sort((a, b) => new Date(a.dateTime) - new Date(b.dateTime));
+
+      filteredAppointments.forEach(apt => {
+        const doctor = doctors.find(d => d.email === apt.doctorId);
+        const card = document.createElement('div');
+        card.className = 'appointment-card';
+        card.innerHTML = `
+          <p><strong>Patient ID:</strong> ${apt.patientId}</p>
+          <p><strong>Doctor:</strong> Dr. ${doctor ? doctor.fullName : 'Unknown'}</p>
+          <p><strong>Date & Time:</strong> ${new Date(apt.dateTime).toLocaleString()}</p>
+          <p><strong>Reason:</strong> ${apt.reason}</p>
+          <p><strong>Status:</strong> <span class="gradient-text">${apt.status.toUpperCase()}</span></p>
+          <div class="appointment-actions">
+            ${apt.status === 'pending' ? `
+              <button class="action-button confirm-button" onclick="updateAppointmentStatus('${apt.id}', 'confirmed')">Confirm</button>
+              <button class="action-button reschedule-button" onclick="rescheduleAppointment('${apt.id}')">Reschedule</button>
+              <button class="action-button cancel-button" onclick="updateAppointmentStatus('${apt.id}', 'cancelled')">Cancel</button>
+            ` : ''}
+          </div>
+        `;
+        appointmentsList.appendChild(card);
+      });
+    }
+
+    // Update appointment status
+    function updateAppointmentStatus(id, status) {
+      const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+      const index = appointments.findIndex(apt => apt.id === id);
+      if (index !== -1) {
+        appointments[index].status = status;
+        localStorage.setItem('appointments', JSON.stringify(appointments));
+        loadAppointments(document.querySelector('.filter-button.active').dataset.filter);
+      }
+    }
+
+    // Handle filter buttons
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', function() {
+        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        loadAppointments(this.dataset.filter);
+      });
+    });
+
+    // Show success message
+    function showSuccessMessage(message) {
+      const successMsg = document.createElement('div');
+      successMsg.className = 'gradient-text text-center mt-4';
+      successMsg.textContent = message;
+      document.querySelector('.form-container').appendChild(successMsg);
+      setTimeout(() => successMsg.remove(), 3000);
+    }
+
+    // Initial load
+    loadAppointments('all');
+
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".appointment-grid", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+  </script>
+</body>
+</html> 

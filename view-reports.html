@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Monthly Reports - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    body { background-color: #000; background-image: url('wahab.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; color: #fff; font-family: 'Arial', sans-serif; min-height: 100vh; margin: 0; padding: 80px 20px 40px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover { text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0; }
+    .back-button { position: fixed; top: 20px; left: 20px; padding: 10px 20px; color: #fff; text-decoration: none; border: 2px solid #c0c0c0; border-radius: 8px; font-weight: bold; background: rgba(0,0,0,0.5); transition: all 0.3s; z-index: 1000; }
+    .back-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); text-shadow: 0 0 5px #fff; }
+    .section { background: rgba(0,0,0,0.8); border: 2px solid #c0c0c0; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; }
+    .section-title { font-size: 1.3rem; font-weight: bold; color: #c0c0c0; margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    th, td { border: 1px solid #c0c0c0; padding: 0.8rem; text-align: center; }
+    th { background: rgba(192,192,192,0.1); color: #c0c0c0; }
+    td { background: rgba(0,0,0,0.6); color: #fff; }
+    .download-btn { padding: 0.7rem 1.5rem; background: transparent; border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; margin-bottom: 1.5rem; display: block; margin-left: auto; }
+    .download-btn:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); }
+    .no-records { color: #ff6666; text-align: center; font-weight: bold; margin: 1.5rem 0; }
+    /* Black scrollbar for all browsers */
+    ::-webkit-scrollbar {
+      width: 10px;
+      background: #000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000;
+    }
+    /* For Firefox */
+    html {
+      scrollbar-color: #222 #000;
+      scrollbar-width: thin;
+    }
+  </style>
+</head>
+<body>
+  <a href="admin-dashboard.html" class="back-button">← Back to Dashboard</a>
+  <div class="container">
+    <h1>Monthly Reports</h1>
+    <button class="download-btn" id="downloadPdfBtn">Download as PDF</button>
+    <div class="section">
+      <div class="section-title">Hospitalizations by Ward</div>
+      <table id="hospitalizationsTable">
+        <thead>
+          <tr><th>Ward</th><th>Hospitalizations</th></tr>
+        </thead>
+        <tbody id="hospitalizationsBody">
+          <!-- Rows will be populated by JS -->
+        </tbody>
+      </table>
+      <div class="no-records" id="noHospRecords" style="display:none;">No records found.</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Appointments by Ward</div>
+      <table id="appointmentsTable">
+        <thead>
+          <tr><th>Ward</th><th>Appointments</th></tr>
+        </thead>
+        <tbody id="appointmentsBody">
+          <!-- Rows will be populated by JS -->
+        </tbody>
+      </table>
+      <div class="no-records" id="noAppRecords" style="display:none;">No records found.</div>
+    </div>
+    <div class="section">
+      <div class="section-title">Emergency Cases by Ward</div>
+      <table id="emergenciesTable">
+        <thead>
+          <tr><th>Ward</th><th>Emergency Cases</th></tr>
+        </thead>
+        <tbody id="emergenciesBody">
+          <!-- Rows will be populated by JS -->
+        </tbody>
+      </table>
+      <div class="no-records" id="noEmergRecords" style="display:none;">No records found.</div>
+    </div>
+  </div>
+  <script>
+    // Get all requests for the current month
+    function getMonthlyRequests() {
+      const all = JSON.parse(localStorage.getItem('requests')) || [];
+      const now = new Date();
+      const thisMonth = now.getMonth();
+      const thisYear = now.getFullYear();
+      return all.filter(r => {
+        const d = new Date(r.timestamp);
+        return d.getMonth() === thisMonth && d.getFullYear() === thisYear;
+      });
+    }
+    function countByWard(type) {
+      const reqs = getMonthlyRequests().filter(r => r.type === type);
+      const counts = {};
+      reqs.forEach(r => {
+        if (!r.ward) return;
+        counts[r.ward] = (counts[r.ward] || 0) + 1;
+      });
+      return counts;
+    }
+    function populateReports() {
+      // Hospitalizations
+      const hospBody = document.getElementById('hospitalizationsBody');
+      const noHosp = document.getElementById('noHospRecords');
+      const hospCounts = countByWard('hospitalization');
+      const hospWards = Object.keys(hospCounts);
+      hospBody.innerHTML = '';
+      if (hospWards.length === 0) {
+        noHosp.style.display = '';
+      } else {
+        noHosp.style.display = 'none';
+        hospWards.forEach(w => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${w}</td><td>${hospCounts[w]}</td>`;
+          hospBody.appendChild(tr);
+        });
+      }
+      // Appointments
+      const appBody = document.getElementById('appointmentsBody');
+      const noApp = document.getElementById('noAppRecords');
+      const appCounts = countByWard('appointment');
+      const appWards = Object.keys(appCounts);
+      appBody.innerHTML = '';
+      if (appWards.length === 0) {
+        noApp.style.display = '';
+      } else {
+        noApp.style.display = 'none';
+        appWards.forEach(w => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${w}</td><td>${appCounts[w]}</td>`;
+          appBody.appendChild(tr);
+        });
+      }
+      // Emergencies
+      const emergBody = document.getElementById('emergenciesBody');
+      const noEmerg = document.getElementById('noEmergRecords');
+      const emergCounts = countByWard('emergency');
+      const emergWards = Object.keys(emergCounts);
+      emergBody.innerHTML = '';
+      if (emergWards.length === 0) {
+        noEmerg.style.display = '';
+      } else {
+        noEmerg.style.display = 'none';
+        emergWards.forEach(w => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td>${w}</td><td>${emergCounts[w]}</td>`;
+          emergBody.appendChild(tr);
+        });
+      }
+    }
+    populateReports();
+    document.getElementById('downloadPdfBtn').addEventListener('click', function() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      let y = 15;
+      function addTable(title, tableSelector) {
+        doc.setFontSize(16);
+        doc.text(title, 14, y);
+        y += 6;
+        const table = document.querySelector(tableSelector);
+        if (!table) return;
+        // Get headers
+        const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.innerText);
+        // Get rows
+        const data = Array.from(table.querySelectorAll('tbody tr')).map(tr =>
+          Array.from(tr.querySelectorAll('td')).map(td => td.innerText)
+        );
+        doc.autoTable({
+          head: [headers],
+          body: data,
+          startY: y,
+          theme: 'grid',
+          headStyles: { fillColor: [192,192,192], textColor: 20, fontStyle: 'bold' },
+          bodyStyles: { textColor: 20 },
+          margin: { left: 14, right: 14 },
+          styles: { fontSize: 11 },
+          didDrawPage: function (data) {
+            y = data.cursor.y + 10;
+          }
+        });
+      }
+      addTable('Hospitalizations by Ward', '.section:nth-of-type(1) table');
+      addTable('Appointments by Ward', '.section:nth-of-type(2) table');
+      addTable('Emergency Cases by Ward', '.section:nth-of-type(3) table');
+      doc.save('monthly-reports.pdf');
+    });
+  </script>
+</body>
+</html>

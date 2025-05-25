@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Read Nurse's Progress Notes - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.7;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 4rem;
+      line-height: 1.1;
+      margin-top: -2rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 14px 28px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 10px;
+    }
+    .neon-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(192,192,192,0.4), transparent);
+      transition: 0.5s;
+    }
+    .neon-button:hover::before {
+      left: 100%;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 80px 20px 60px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+    }
+    .input-field {
+      margin-bottom: 1.5rem;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      background-color: transparent;
+      color: #fff;
+      font-size: 18px;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #c0c0c0;
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #c0c0c0;
+      font-size: 16px;
+      text-decoration: none;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .back-button:hover {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .form-group {
+      margin-bottom: 2rem;
+      text-align: left;
+      width: 100%;
+      max-width: 400px;
+    }
+    .form-group label {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: #c0c0c0;
+    }
+    select.input-field {
+      background-color: #000;
+      color: #fff;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 30px;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23c0c0c0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    select.input-field option {
+      background-color: #000;
+      color: #fff;
+    }
+    select.input-field option[disabled] {
+      color: #888;
+    }
+    select.input-field:focus {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .notes-container {
+      width: 100%;
+      max-width: 600px;
+      text-align: left;
+      margin-top: 2rem;
+    }
+    .note {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border: 1px solid #c0c0c0;
+    }
+    .note p {
+      margin: 0.5rem 0;
+      color: #c0c0c0;
+    }
+    .note p span {
+      color: #fff;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <a href="doctor-dashboard.html" class="back-button">← Back</a>
+
+  <!-- Main Content -->
+  <section class="section">
+    <h1 class="gradient-text animate-title">READ NURSE'S PROGRESS NOTES</h1>
+    <div class="form-group">
+      <label for="patientId">Select Hospitalized Patient:</label>
+      <select class="input-field" id="patientId" name="patientId">
+        <option value="" disabled selected>Select a Patient</option>
+      </select>
+    </div>
+    <div class="notes-container" id="notes-container" style="display: none;">
+      <h2 class="gradient-text text-2xl mb-4">Nurse's Progress Notes</h2>
+      <div id="notes-list"></div>
+    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      scale: 0.9,
+      duration: 1.5,
+      ease: "power4.out",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+    gsap.from(".form-group", {
+      opacity: 0,
+      scale: 0.9,
+      duration: 1.2,
+      delay: 1,
+      ease: "elastic.out(1, 0.4)",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+
+    // Load hospitalized patients for the logged-in doctor
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const doctor = users.find(user => user.email === loggedInUserEmail && user.userType === 'Doctor');
+
+    if (!doctor) {
+      alert('Please log in as a Doctor to view nurse progress notes.');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const patients = JSON.parse(localStorage.getItem('patients')) || [];
+    const hospitalizedPatients = patients.filter(patient => 
+      patient.doctorEmail === loggedInUserEmail && patient.hospitalized === true
+    );
+
+    const patientSelect = document.getElementById('patientId');
+    hospitalizedPatients.forEach(patient => {
+      const option = document.createElement('option');
+      option.value = patient.id;
+      option.textContent = `${patient.name} (ID: ${patient.id}) - Bed: ${patient.bedNumber || 'N/A'}`;
+      patientSelect.appendChild(option);
+    });
+
+    if (hospitalizedPatients.length === 0) {
+      alert('No hospitalized patients assigned to you.');
+      window.location.href = 'doctor-dashboard.html';
+      return;
+    }
+
+    // Handle patient selection
+    patientSelect.addEventListener('change', (e) => {
+      const patientId = e.target.value;
+      const notesContainer = document.getElementById('notes-container');
+      const notesList = document.getElementById('notes-list');
+      notesList.innerHTML = '';
+
+      if (!patientId) {
+        notesContainer.style.display = 'none';
+        return;
+      }
+
+      const patient = patients.find(p => p.id === patientId);
+      if (patient && patient.progressNotes && patient.progressNotes.length > 0) {
+        patient.progressNotes.forEach(note => {
+          const noteDiv = document.createElement('div');
+          noteDiv.className = 'note';
+          noteDiv.innerHTML = `
+            <p>Date: <span>${note.date || 'N/A'}</span></p>
+            <p>Time: <span>${note.time || 'N/A'}</span></p>
+            <p>Nurse: <span>${note.nurseName || 'N/A'}</span></p>
+            <p>Note: <span>${note.note || 'N/A'}</span></p>
+          `;
+          notesList.appendChild(noteDiv);
+        });
+        notesContainer.style.display = 'block';
+
+        // Animate notes
+        gsap.from(".note", {
+          opacity: 0,
+          y: 20,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: "power2.out"
+        });
+      } else {
+        notesList.innerHTML = '<p class="text-center">No progress notes found for this patient.</p>';
+        notesContainer.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

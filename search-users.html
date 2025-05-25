@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Users - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #000; background-image: url('wahab.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; color: #fff; font-family: 'Arial', sans-serif; min-height: 100vh; margin: 0; padding: 80px 20px 40px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover { text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0; }
+    .back-button { position: fixed; top: 20px; left: 20px; padding: 10px 20px; color: #fff; text-decoration: none; border: 2px solid #c0c0c0; border-radius: 8px; font-weight: bold; background: rgba(0,0,0,0.5); transition: all 0.3s; z-index: 1000; }
+    .back-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); text-shadow: 0 0 5px #fff; }
+    .section { background: rgba(0,0,0,0.8); border: 2px solid #c0c0c0; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; }
+    .search-bar { width: 100%; max-width: 400px; margin: 0 auto 2rem; display: flex; }
+    .search-input { flex: 1; padding: 0.7rem; background: rgba(255,255,255,0.1); border: 2px solid #c0c0c0; border-radius: 8px 0 0 8px; color: #fff; }
+    .search-input:focus { outline: none; box-shadow: 0 0 10px #c0c0c0; }
+    .search-btn { padding: 0.7rem 1.2rem; background: transparent; border: 2px solid #c0c0c0; border-left: none; border-radius: 0 8px 8px 0; color: #fff; font-weight: bold; cursor: pointer; transition: all 0.3s; }
+    .search-btn:hover { box-shadow: 0 0 10px #c0c0c0; background: rgba(192,192,192,0.1); }
+    table { width: 100%; border-collapse: collapse; margin-top: 1.5rem; }
+    th, td { border: 1px solid #c0c0c0; padding: 0.8rem; text-align: center; }
+    th { background: rgba(192,192,192,0.1); color: #c0c0c0; }
+    td { background: rgba(0,0,0,0.6); color: #fff; }
+    .no-results { color: #ff6666; text-align: center; font-weight: bold; margin: 1.5rem 0; }
+    /* Black scrollbar for all browsers */
+    ::-webkit-scrollbar {
+      width: 10px;
+      background: #000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000;
+    }
+    /* For Firefox */
+    html {
+      scrollbar-color: #222 #000;
+      scrollbar-width: thin;
+    }
+  </style>
+</head>
+<body>
+  <a href="admin-dashboard.html" class="back-button">← Back to Dashboard</a>
+  <div class="container">
+    <h1>Search Users</h1>
+    <div class="search-bar">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search by ID, Name, Surname, Ward..." />
+      <button class="search-btn" id="searchBtn">Search</button>
+    </div>
+    <div class="section" id="resultsSection">
+      <table id="resultsTable">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Surname</th>
+            <th>Role</th>
+            <th>Ward</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>DR001</td><td>John</td><td>Smith</td><td>Doctor</td><td>Cardiology</td></tr>
+          <tr><td>NR002</td><td>Jane</td><td>Doe</td><td>Nurse</td><td>Oncology</td></tr>
+          <tr><td>HR003</td><td>Emily</td><td>Clark</td><td>Hospital Receptionist</td><td>-</td></tr>
+          <tr><td>PR004</td><td>Michael</td><td>Lee</td><td>Polyclinic Receptionist</td><td>-</td></tr>
+        </tbody>
+      </table>
+      <div class="no-results" id="noResults" style="display:none;">No results found.</div>
+    </div>
+  </div>
+  <script>
+    function getUsers() {
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      // Filter out broken/incomplete users
+      return users.filter(u => u && u.id && u.name && u.surname && u.role && typeof u.ward !== 'undefined');
+    }
+    let users = getUsers();
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsTable = document.getElementById('resultsTable').getElementsByTagName('tbody')[0];
+    const noResults = document.getElementById('noResults');
+    function renderResults(filtered) {
+      resultsTable.innerHTML = '';
+      if (filtered.length === 0) {
+        noResults.style.display = '';
+        return;
+      }
+      noResults.style.display = 'none';
+      filtered.forEach(u => {
+        const row = document.createElement('tr');
+        row.innerHTML = `<td>${u.id}</td><td>${u.name}</td><td>${u.surname}</td><td>${u.role}</td><td>${u.ward}</td>`;
+        resultsTable.appendChild(row);
+      });
+    }
+    searchBtn.addEventListener('click', function() {
+      const val = searchInput.value.trim().toLowerCase();
+      if (!val) {
+        renderResults(users);
+        return;
+      }
+      const filtered = users.filter(u =>
+        u.id.toLowerCase().includes(val) ||
+        u.name.toLowerCase().includes(val) ||
+        u.surname.toLowerCase().includes(val) ||
+        u.ward.toLowerCase().includes(val)
+      );
+      renderResults(filtered);
+    });
+    // Initial render
+    renderResults(users);
+  </script>
+</body>
+</html>

@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add Emergency Entry - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 10px;
+    }
+    .neon-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(192,192,192,0.4), transparent);
+      transition: 0.5s;
+    }
+    .neon-button:hover::before {
+      left: 100%;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 60px 20px;
+      border-radius: 8px;
+      margin: 40px auto;
+      max-width: 600px;
+    }
+    .input-field, textarea {
+      margin-bottom: 1.5rem;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    textarea {
+      height: 120px;
+      resize: none;
+    }
+    .input-field:focus, textarea:focus {
+      outline: none;
+      border-color: #ffffff;
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #c0c0c0;
+      font-size: 14px;
+      text-decoration: none;
+      padding: 8px 16px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .back-button:hover {
+      box-shadow: 0 0 15px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+      width: 100%;
+      max-width: 400px;
+    }
+    .form-group label {
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: #c0c0c0;
+    }
+    select.input-field {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #fff;
+      appearance: none;
+      padding-right: 30px;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23c0c0c0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    select.input-field option {
+      background-color: #000;
+      color: #fff;
+    }
+    select.input-field option[disabled] {
+      color: #888;
+    }
+    select.input-field:focus {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .error-message {
+      color: #ff6666;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <a href="doctor-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <!-- Main Content -->
+  <section class="section">
+    <h1 class="gradient-text animate-title">ADD EMERGENCY ENTRY</h1>
+    <form id="emergency-entry-form">
+      <div class="form-group">
+        <label for="patientId">Select Patient</label>
+        <select class="input-field" id="patientId" name="patientId" required>
+          <option value="" disabled selected>Select a Patient</option>
+        </select>
+        <p class="error-message" id="patientId-error">Please select a patient.</p>
+      </div>
+      <div class="form-group">
+        <label for="condition">Emergency Condition</label>
+        <input type="text" class="input-field" id="condition" name="condition" required placeholder="e.g., Severe chest pain">
+        <p class="error-message" id="condition-error">Please enter the emergency condition.</p>
+      </div>
+      <div class="form-group">
+        <label for="urgency">Urgency Level</label>
+        <select class="input-field" id="urgency" name="urgency" required>
+          <option value="" disabled selected>Select Urgency Level</option>
+          <option value="Low">Low</option>
+          <option value="Moderate">Moderate</option>
+          <option value="High">High</option>
+          <option value="Critical">Critical</option>
+        </select>
+        <p class="error-message" id="urgency-error">Please select an urgency level.</p>
+      </div>
+      <div class="form-group">
+        <label for="notes">Notes (Optional)</label>
+        <textarea class="input-field" id="notes" name="notes" placeholder="Additional details about the emergency"></textarea>
+      </div>
+      <button type="submit" class="neon-button">Add Emergency Entry</button>
+    </form>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      scale: 0.95,
+      duration: 1.2,
+      ease: "power4.out",
+    });
+    gsap.from("#emergency-entry-form", {
+      opacity: 0,
+      scale: 0.95,
+      duration: 1.2,
+      delay: 0.5,
+      ease: "elastic.out(1, 0.4)",
+    });
+
+    // Initialize localStorage if not already set (for testing purposes)
+    if (!localStorage.getItem('users')) {
+      localStorage.setItem('users', JSON.stringify([]));
+    }
+    if (!localStorage.getItem('patients')) {
+      localStorage.setItem('patients', JSON.stringify([]));
+    }
+
+    // Load patients for the logged-in doctor
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const doctor = users.find(user => user.email === loggedInUserEmail && user.userType === 'Doctor');
+
+    const patientSelect = document.getElementById('patientId');
+    if (!doctor) {
+      alert('Please log in as a Doctor to add emergency entries.');
+      window.location.href = 'login.html';
+    } else {
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const doctorPatients = patients.filter(patient => patient.doctorEmail === loggedInUserEmail);
+
+      if (doctorPatients.length === 0) {
+        alert('No patients assigned to you.');
+        window.location.href = 'doctor-dashboard.html';
+      } else {
+        doctorPatients.forEach(patient => {
+          const option = document.createElement('option');
+          option.value = patient.id;
+          option.textContent = `${patient.name} (ID: ${patient.id})`;
+          patientSelect.appendChild(option);
+        });
+      }
+    }
+
+    // Form validation and submission
+    const form = document.getElementById('emergency-entry-form');
+    const patientIdError = document.getElementById('patientId-error');
+    const conditionError = document.getElementById('condition-error');
+    const urgencyError = document.getElementById('urgency-error');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      let hasError = false;
+
+      // Reset error messages
+      patientIdError.style.display = 'none';
+      conditionError.style.display = 'none';
+      urgencyError.style.display = 'none';
+
+      // Validate inputs
+      const patientId = form.patientId.value;
+      const condition = form.condition.value.trim();
+      const urgency = form.urgency.value;
+      const notes = form.notes.value.trim();
+
+      if (!patientId) {
+        patientIdError.style.display = 'block';
+        hasError = true;
+      }
+      if (!condition) {
+        conditionError.style.display = 'block';
+        hasError = true;
+      }
+      if (!urgency) {
+        urgencyError.style.display = 'block';
+        hasError = true;
+      }
+
+      if (hasError) return;
+
+      // Create emergency entry
+      const now = new Date();
+      const emergencyEntry = {
+        date: now.toISOString().split('T')[0], // e.g., "2025-04-22"
+        time: now.toTimeString().split(' ')[0], // e.g., "09:50:00"
+        condition: condition,
+        urgency: urgency,
+        notes: notes || 'N/A',
+        doctorName: doctor.fullName || 'Unknown Doctor'
+      };
+
+      // Add emergency entry to patient's record
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const patient = patients.find(p => p.id === patientId);
+      if (patient) {
+        patient.emergencyEntries = patient.emergencyEntries || [];
+        patient.emergencyEntries.push(emergencyEntry);
+        localStorage.setItem('patients', JSON.stringify(patients));
+        alert('Emergency entry added successfully!');
+        window.location.href = 'doctor-dashboard.html';
+      } else {
+        alert('Patient not found. Please try again.');
+      }
+    });
+  </script>
+</body>
+</html>

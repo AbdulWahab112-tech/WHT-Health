@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Add New User - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #000; background-image: url('wahab.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; color: #fff; font-family: 'Arial', sans-serif; min-height: 100vh; margin: 0; padding: 80px 20px 40px; }
+    .container { max-width: 600px; margin: 0 auto; }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover { text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0; }
+    .back-button { position: fixed; top: 20px; left: 20px; padding: 10px 20px; color: #fff; text-decoration: none; border: 2px solid #c0c0c0; border-radius: 8px; font-weight: bold; background: rgba(0,0,0,0.5); transition: all 0.3s; z-index: 1000; }
+    .back-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); text-shadow: 0 0 5px #fff; }
+    .section { background: rgba(0,0,0,0.8); border: 2px solid #c0c0c0; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-label { color: #c0c0c0; font-weight: bold; margin-bottom: 0.3rem; display: block; }
+    .form-input, .form-select { width: 100%; padding: 0.7rem; background: rgba(255,255,255,0.1); border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; margin-bottom: 0.5rem; }
+    .form-input:focus, .form-select:focus { outline: none; box-shadow: 0 0 10px #c0c0c0; }
+    .neon-button { width: 100%; padding: 0.7rem; background: transparent; border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; margin-top: 0.5rem; }
+    .neon-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); }
+    .error-msg { color: #ff6666; font-weight: bold; margin-bottom: 1rem; text-align: center; }
+    .success-msg { color: #66ff66; font-weight: bold; margin-bottom: 1rem; text-align: center; }
+    /* Black scrollbar for all browsers */
+    ::-webkit-scrollbar {
+      width: 10px;
+      background: #000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000;
+    }
+    /* For Firefox */
+    html {
+      scrollbar-color: #222 #000;
+      scrollbar-width: thin;
+    }
+    select, option {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #c0c0c0;
+    }
+    select:focus {
+      box-shadow: 0 0 10px #c0c0c0;
+    }
+    select::-webkit-scrollbar, option::-webkit-scrollbar {
+      width: 10px;
+      background: #000;
+    }
+    select::-webkit-scrollbar-thumb, option::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 8px;
+    }
+    select::-webkit-scrollbar-track, option::-webkit-scrollbar-track {
+      background: #000;
+    }
+    select, option, html {
+      scrollbar-color: #222 #000;
+      scrollbar-width: thin;
+    }
+  </style>
+</head>
+<body>
+  <a href="admin-dashboard.html" class="back-button">← Back to Dashboard</a>
+  <div class="container">
+    <h1>Add New User</h1>
+    <div class="section">
+      <form id="addUserForm" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label">User Type</label>
+          <select class="form-select" id="userType" required>
+            <option value="">Select</option>
+            <option value="doctor">Doctor</option>
+            <option value="nurse">Nurse</option>
+            <option value="receptionist">Receptionist</option>
+          </select>
+        </div>
+        <div class="form-group" id="receptionistTypeGroup" style="display:none;">
+          <label class="form-label">Receptionist Type</label>
+          <select class="form-select" id="receptionistType">
+            <option value="">Select</option>
+            <option value="hospital">Hospital Receptionist</option>
+            <option value="polyclinic">Polyclinic Receptionist</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">ID</label>
+          <input type="text" class="form-input" id="userId" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Name</label>
+          <input type="text" class="form-input" id="userName" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Surname</label>
+          <input type="text" class="form-input" id="userSurname" required />
+        </div>
+        <div class="form-group" id="wardGroup" style="display:none;">
+          <label class="form-label">Ward</label>
+          <input type="text" class="form-input" id="userWard" />
+        </div>
+        <div id="formMsg"></div>
+        <button type="submit" class="neon-button">Add User</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    // Show/hide fields based on user type
+    const userType = document.getElementById('userType');
+    const receptionistTypeGroup = document.getElementById('receptionistTypeGroup');
+    const wardGroup = document.getElementById('wardGroup');
+    userType.addEventListener('change', function() {
+      if (this.value === 'receptionist') {
+        receptionistTypeGroup.style.display = '';
+        wardGroup.style.display = 'none';
+      } else if (this.value === 'doctor' || this.value === 'nurse') {
+        receptionistTypeGroup.style.display = 'none';
+        wardGroup.style.display = '';
+      } else {
+        receptionistTypeGroup.style.display = 'none';
+        wardGroup.style.display = 'none';
+      }
+    });
+    // Dummy validation for required fields
+    document.getElementById('addUserForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const id = document.getElementById('userId').value.trim();
+      const name = document.getElementById('userName').value.trim();
+      const surname = document.getElementById('userSurname').value.trim();
+      const type = userType.value;
+      const ward = document.getElementById('userWard').value.trim();
+      const recType = document.getElementById('receptionistType').value;
+      let msg = '';
+      let role = '';
+      let finalWard = '';
+      if (!type) msg = 'Please select user type.';
+      else if (!id || !name || !surname) msg = 'All fields are required.';
+      else if ((type === 'doctor' || type === 'nurse') && !ward) msg = 'Ward is required for Doctor/Nurse.';
+      else if (type === 'receptionist' && !recType) msg = 'Please select receptionist type.';
+      if (msg) {
+        document.getElementById('formMsg').innerHTML = `<div class='error-msg'>${msg}</div>`;
+        return;
+      }
+      if (type === 'doctor') { role = 'Doctor'; finalWard = ward; }
+      else if (type === 'nurse') { role = 'Nurse'; finalWard = ward; }
+      else if (type === 'receptionist') {
+        role = recType === 'hospital' ? 'Hospital Receptionist' : 'Polyclinic Receptionist';
+        finalWard = '-';
+      }
+      // Save to localStorage
+      let users = JSON.parse(localStorage.getItem('users')) || [];
+      // Prevent duplicate IDs
+      if (users.some(u => u.id === id)) {
+        document.getElementById('formMsg').innerHTML = `<div class='error-msg'>User ID already exists.</div>`;
+        return;
+      }
+      users.push({ id, name, surname, role, ward: finalWard });
+      localStorage.setItem('users', JSON.stringify(users));
+      document.getElementById('formMsg').innerHTML = `<div class='success-msg'>User added successfully!</div>`;
+      this.reset();
+      receptionistTypeGroup.style.display = 'none';
+      wardGroup.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

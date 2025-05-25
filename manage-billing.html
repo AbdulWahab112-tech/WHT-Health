@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Billing - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .billing-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      padding-top: 120px;
+    }
+    .billing-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+    }
+    .form-container {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(5px);
+    }
+    .bills-list {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(5px);
+      max-height: 700px;
+      overflow-y: auto;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 100%;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .bill-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    .bill-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+    .bill-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .action-button {
+      padding: 5px 10px;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .pay-button { color: #4CAF50; }
+    .print-button { color: #2196F3; }
+    .void-button { color: #f44336; }
+    .action-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .filter-button {
+      padding: 8px 16px;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: transparent;
+      color: #fff;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 10px #c0c0c0;
+    }
+    .billing-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+    /* Add styles for date/time inputs */
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    select {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 8px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator,
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  </style>
+</head>
+<body>
+  <a href="polyclinic-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="billing-container">
+    <h1 class="gradient-text animate-title text-center">MANAGE BILLING</h1>
+
+    <div class="billing-grid">
+      <!-- New Bill Form -->
+      <div class="form-container">
+        <h2 class="gradient-text text-xl mb-4">Create New Bill</h2>
+        <form id="billing-form">
+          <div class="form-group">
+            <label for="patientId" class="form-label">Patient ID</label>
+            <input type="text" id="patientId" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="serviceType" class="form-label">Service Type</label>
+            <select id="serviceType" class="form-input" required>
+              <option value="">Select service</option>
+              <option value="consultation">Consultation</option>
+              <option value="treatment">Treatment</option>
+              <option value="medication">Medication</option>
+              <option value="lab-test">Laboratory Test</option>
+              <option value="procedure">Medical Procedure</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="description" class="form-label">Description</label>
+            <textarea id="description" class="form-input" rows="3" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="amount" class="form-label">Amount</label>
+            <input type="number" id="amount" class="form-input" min="0" step="0.01" required>
+          </div>
+
+          <button type="submit" class="neon-button">Generate Bill</button>
+        </form>
+      </div>
+
+      <!-- Bills List -->
+      <div>
+        <!-- Billing Statistics -->
+        <div class="billing-stats">
+          <div class="stat-card">
+            <p class="gradient-text">Total Bills</p>
+            <p class="stat-value" id="totalBills">0</p>
+          </div>
+          <div class="stat-card">
+            <p class="gradient-text">Pending Amount</p>
+            <p class="stat-value" id="pendingAmount">$0</p>
+          </div>
+          <div class="stat-card">
+            <p class="gradient-text">Today's Collection</p>
+            <p class="stat-value" id="todayCollection">$0</p>
+          </div>
+        </div>
+
+        <div class="filter-buttons">
+          <button class="filter-button active" data-filter="all">All</button>
+          <button class="filter-button" data-filter="pending">Pending</button>
+          <button class="filter-button" data-filter="paid">Paid</button>
+          <button class="filter-button" data-filter="void">Void</button>
+        </div>
+
+        <div class="bills-list" id="billsList">
+          <!-- Bills will be populated here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    // Generate unique bill ID
+    function generateBillId() {
+      const timestamp = Date.now().toString();
+      const random = Math.random().toString(36).substring(2, 8);
+      return `B${timestamp.slice(-6)}${random.toUpperCase()}`;
+    }
+
+    // Format currency
+    function formatCurrency(amount) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(amount);
+    }
+
+    // Update billing statistics
+    function updateStats() {
+      const bills = JSON.parse(localStorage.getItem('bills')) || [];
+      const today = new Date().toDateString();
+
+      document.getElementById('totalBills').textContent = bills.length;
+
+      const pendingAmount = bills
+        .filter(bill => bill.status === 'pending')
+        .reduce((sum, bill) => sum + bill.amount, 0);
+      document.getElementById('pendingAmount').textContent = formatCurrency(pendingAmount);
+
+      const todayCollection = bills
+        .filter(bill => bill.status === 'paid' && new Date(bill.paidAt).toDateString() === today)
+        .reduce((sum, bill) => sum + bill.amount, 0);
+      document.getElementById('todayCollection').textContent = formatCurrency(todayCollection);
+    }
+
+    // Update bills display
+    function updateBillsDisplay(filter = 'all') {
+      const bills = JSON.parse(localStorage.getItem('bills')) || [];
+      const billsList = document.getElementById('billsList');
+      billsList.innerHTML = '';
+
+      const filteredBills = bills.filter(bill => {
+        if (filter === 'all') return true;
+        return bill.status === filter;
+      });
+
+      filteredBills.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      filteredBills.forEach(bill => {
+        const card = document.createElement('div');
+        card.className = 'bill-item';
+        card.innerHTML = `
+          <h3 class="gradient-text text-lg">Bill #${bill.id}</h3>
+          <p><strong>Patient ID:</strong> ${bill.patientId}</p>
+          <p><strong>Service:</strong> ${bill.serviceType}</p>
+          <p><strong>Description:</strong> ${bill.description}</p>
+          <p><strong>Amount:</strong> ${formatCurrency(bill.amount)}</p>
+          <p><strong>Status:</strong> <span class="gradient-text">${bill.status.toUpperCase()}</span></p>
+          <p><strong>Date:</strong> ${new Date(bill.createdAt).toLocaleString()}</p>
+          ${bill.status === 'pending' ? `
+            <div class="bill-actions">
+              <button class="action-button pay-button" onclick="updateBillStatus('${bill.id}', 'paid')">Mark as Paid</button>
+              <button class="action-button print-button" onclick="printBill('${bill.id}')">Print</button>
+              <button class="action-button void-button" onclick="updateBillStatus('${bill.id}', 'void')">Void</button>
+            </div>
+          ` : ''}
+        `;
+        billsList.appendChild(card);
+      });
+    }
+
+    // Handle bill form submission
+    document.getElementById('billing-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const bill = {
+        id: generateBillId(),
+        patientId: document.getElementById('patientId').value,
+        serviceType: document.getElementById('serviceType').value,
+        description: document.getElementById('description').value,
+        amount: parseFloat(document.getElementById('amount').value),
+        status: 'pending',
+        createdAt: new Date().toISOString()
+      };
+
+      const bills = JSON.parse(localStorage.getItem('bills')) || [];
+      bills.push(bill);
+      localStorage.setItem('bills', JSON.stringify(bills));
+
+      this.reset();
+      updateStats();
+      updateBillsDisplay(document.querySelector('.filter-button.active').dataset.filter);
+    });
+
+    // Update bill status
+    function updateBillStatus(id, status) {
+      const bills = JSON.parse(localStorage.getItem('bills')) || [];
+      const index = bills.findIndex(bill => bill.id === id);
+      
+      if (index !== -1) {
+        bills[index].status = status;
+        if (status === 'paid') {
+          bills[index].paidAt = new Date().toISOString();
+        }
+        localStorage.setItem('bills', JSON.stringify(bills));
+        updateStats();
+        updateBillsDisplay(document.querySelector('.filter-button.active').dataset.filter);
+      }
+    }
+
+    // Print bill
+    function printBill(id) {
+      const bills = JSON.parse(localStorage.getItem('bills')) || [];
+      const bill = bills.find(b => b.id === id);
+      if (!bill) return;
+
+      const printWindow = window.open('', '', 'width=800,height=600');
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Bill #${bill.id}</title>
+            <style>
+              body { font-family: Arial, sans-serif; padding: 20px; }
+              .header { text-align: center; margin-bottom: 30px; }
+              .bill-info { margin-bottom: 20px; }
+              .amount { font-size: 24px; font-weight: bold; }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <h1>WHT Health</h1>
+              <h2>Bill #${bill.id}</h2>
+            </div>
+            <div class="bill-info">
+              <p><strong>Date:</strong> ${new Date(bill.createdAt).toLocaleString()}</p>
+              <p><strong>Patient ID:</strong> ${bill.patientId}</p>
+              <p><strong>Service:</strong> ${bill.serviceType}</p>
+              <p><strong>Description:</strong> ${bill.description}</p>
+              <p class="amount">Amount: ${formatCurrency(bill.amount)}</p>
+              <p><strong>Status:</strong> ${bill.status.toUpperCase()}</p>
+            </div>
+          </body>
+        </html>
+      `);
+      printWindow.document.close();
+      printWindow.print();
+    }
+
+    // Handle filter buttons
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', function() {
+        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        updateBillsDisplay(this.dataset.filter);
+      });
+    });
+
+    // Initial load
+    updateStats();
+    updateBillsDisplay('all');
+
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".billing-grid", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+
+    gsap.from(".billing-stats", {
+      opacity: 0,
+      scale: 0.8,
+      duration: 0.8,
+      delay: 0.5,
+      ease: "power3.out",
+      stagger: 0.2
+    });
+  </script>
+</body>
+</html> 
+</html> 

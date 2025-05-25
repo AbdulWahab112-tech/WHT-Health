@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cancel Appointment - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.7;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+      min-height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 4rem;
+      line-height: 1.1;
+      margin-top: -2rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 14px 28px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 10px;
+    }
+    .neon-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(192,192,192,0.4), transparent);
+      transition: 0.5s;
+    }
+    .neon-button:hover::before {
+      left: 100%;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 80px 20px 60px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+    }
+    .input-field {
+      margin-bottom: 1.5rem;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      background-color: transparent;
+      color: #fff;
+      font-size: 18px;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #c0c0c0;
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      color: #c0c0c0;
+      font-size: 16px;
+      text-decoration: none;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      z-index: 10;
+    }
+    .back-button:hover {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .form-group {
+      margin-bottom: 2rem;
+      text-align: left;
+      width: 100%;
+      max-width: 400px;
+    }
+    .form-group label {
+      font-size: 1.2rem;
+      margin-bottom: 0.5rem;
+      display: block;
+      color: #c0c0c0;
+    }
+    select.input-field {
+      background-color: #000;
+      color: #fff;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      padding-right: 30px;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23c0c0c0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    select.input-field option {
+      background-color: #000;
+      color: #fff;
+    }
+    select.input-field option[disabled] {
+      color: #888;
+    }
+    select.input-field:focus {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+  </style>
+</head>
+<body>
+  <a href="doctor-dashboard.html" class="back-button">← Back</a>
+
+  <!-- Main Content -->
+  <section class="section">
+    <h1 class="gradient-text animate-title">CANCEL APPOINTMENT</h1>
+    <form id="cancel-appointment-form">
+      <div class="form-group">
+        <label for="appointmentId">Select Appointment:</label>
+        <select class="input-field" id="appointmentId" name="appointmentId" required>
+          <option value="" disabled selected>Select an Appointment</option>
+        </select>
+      </div>
+      <button type="submit" class="neon-button">Cancel Appointment</button>
+    </form>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      scale: 0.9,
+      duration: 1.5,
+      ease: "power4.out",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+    gsap.from("#cancel-appointment-form", {
+      opacity: 0,
+      scale: 0.9,
+      duration: 1.2,
+      delay: 1,
+      ease: "elastic.out(1, 0.4)",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+
+    // Load appointments for the logged-in doctor
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const doctor = users.find(user => user.email === loggedInUserEmail && user.userType === 'Doctor');
+
+    if (!doctor) {
+      alert('Please log in as a Doctor to cancel appointments.');
+      window.location.href = 'login.html';
+      return;
+    }
+
+    const appointments = JSON.parse(localStorage.getItem('appointments')) || [];
+    const doctorAppointments = appointments.filter(appointment => 
+      appointment.doctorEmail === loggedInUserEmail && appointment.status === 'Scheduled'
+    );
+
+    const appointmentSelect = document.getElementById('appointmentId');
+    doctorAppointments.forEach(appointment => {
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const patient = patients.find(p => p.id === appointment.patientId);
+      const option = document.createElement('option');
+      option.value = appointment.id;
+      option.textContent = `Patient: ${patient ? patient.name : 'Unknown'} (ID: ${appointment.patientId}) - ${appointment.date} ${appointment.time}`;
+      appointmentSelect.appendChild(option);
+    });
+
+    if (doctorAppointments.length === 0) {
+      alert('No scheduled appointments found to cancel.');
+      window.location.href = 'doctor-dashboard.html';
+      return;
+    }
+
+    // Handle form submission
+    document.getElementById('cancel-appointment-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(e.target);
+      const appointmentId = parseInt(formData.get('appointmentId'));
+
+      // Update appointment status
+      const appointment = appointments.find(a => a.id === appointmentId);
+      if (appointment) {
+        appointment.status = 'Cancelled';
+        localStorage.setItem('appointments', JSON.stringify(appointments));
+
+        // Update patient records
+        const patients = JSON.parse(localStorage.getItem('patients')) || [];
+        const patient = patients.find(p => p.id === appointment.patientId);
+        if (patient) {
+          patient.records = patient.records || [];
+          const recordIndex = patient.records.findIndex(r => r.visitDate === appointment.date && r.appointmentTime === appointment.time);
+          if (recordIndex !== -1) {
+            patient.records[recordIndex].status = 'Cancelled';
+          }
+          localStorage.setItem('patients', JSON.stringify(patients));
+
+          // Simulate notification (in a real system, this would be an email/SMS)
+          alert(`Patient ${patient.name} has been notified of the cancellation via email/text.`);
+        }
+
+        alert('Appointment cancelled successfully! It can be rescheduled through the polyclinic receptionist.');
+        window.location.href = 'doctor-dashboard.html';
+      } else {
+        alert('Appointment not found.');
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>WHT HEALTH</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      background-color:#06061b;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      overflow-x: hidden;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 5rem;
+      line-height: 1.1;
+      margin-top: -2rem;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: 0.3s ease;
+    }
+    h1:hover {
+      font-weight: 1000;
+      text-shadow: 0 0 20px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 14px 28px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 10px;
+    }
+    .neon-button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(192,192,192,0.4), transparent);
+      transition: 0.5s;
+    }
+    .neon-button:hover::before {
+      left: 100%;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      padding: 80px 20px 60px;
+      background-color: rgba(0, 0, 0, 0.7);
+      border-radius: 8px;
+    }
+    .input-field {
+      margin-bottom: 1.5rem;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      width: 100%;
+      max-width: 400px;
+      background-color: transparent;
+      color: #fff;
+      font-size: 18px;
+    }
+    .input-field:focus {
+      outline: none;
+      border-color: #c0c0c0;
+      box-shadow: 0 0 10px rgba(192, 192, 192, 0.5);
+    }
+    .back-button {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      color: #c0c0c0;
+      font-size: 16px;
+      text-decoration: none;
+      padding: 10px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+    .back-button:hover {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .animate-buttons {
+      margin-top: 2rem;
+    }
+    /* Parallax Section */
+    .parallax-section {
+      position: relative;
+      height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    .parallax-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
+      opacity: 0.7;
+    }
+    .parallax-text {
+      font-family: 'Lovelo', sans-serif;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      position: absolute;
+      width: 100%;
+      max-width: 90%;
+      text-wrap: balance;
+      transition: text-shadow 0.3s ease;
+    }
+    .parallax-text:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    #text1 {
+      font-size: 3rem;
+    }
+    #text2 {
+      font-size: 2.5rem;
+      transform: translateY(100px); /* Start below the center */
+    }
+    /* Neon Text Animation for SCROLL DOWN */
+    .neon-text {
+      position: relative;
+      transition: all 0.3s ease;
+    }
+    .neon-text::before {
+      content: 'SCROLL DOWN'; /* Updated text content */
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(192,192,192,0.4), transparent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: sweep 2s infinite;
+    }
+    @keyframes sweep {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(100%);
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Parallax Section -->
+  <div class="parallax-section">
+    <img src="wahab.png" alt="Heart" class="parallax-image" />
+    <div class="parallax-text" id="text1">WHT HEALTH</div>
+    <div class="parallax-text neon-text" id="text2" style="opacity: 0;">SCROLL DOWN</div>
+  </div>
+
+  <!-- Main Content -->
+  <section class="section">
+    <h1 class="animate-title">WHT HEALTH</h1>
+    <p class="text-gray-300 text-lg max-w-xl italic animate-subtitle">
+      "The art of medicine consists of amusing the patient while nature cures the disease." – Voltaire
+    </p>
+    <div class="animate-buttons mt-8">
+      <a href="login.html"><button class="neon-button">Login</button></a>
+      <a href="signup.html"><button class="neon-button">Sign Up</button></a>
+    </div>
+  </section>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+  <script>
+    // GSAP Animations for Parallax Effect
+    gsap.registerPlugin(ScrollTrigger);
+
+    gsap.to("#text1", {
+      scrollTrigger: {
+        trigger: ".parallax-section",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+      opacity: 0,
+      y: -100, // Move up and out of view
+      duration: 1,
+    });
+
+    gsap.to("#text2", {
+      scrollTrigger: {
+        trigger: ".parallax-section",
+        start: "top top",
+        end: "bottom top",
+        scrub: true,
+      },
+      opacity: 1,
+      y: 0, // Move up into the center
+      duration: 1,
+    });
+
+    // GSAP Animations for Main Content
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1.2,
+      ease: "power4.out",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+    gsap.from(".animate-subtitle", {
+      opacity: 0,
+      y: 30,
+      duration: 1.2,
+      delay: 0.3,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+    gsap.from(".animate-buttons", {
+      opacity: 0,
+      scale: 0.9,
+      duration: 1.2,
+      delay: 0.6,
+      ease: "elastic.out(1, 0.4)",
+      scrollTrigger: {
+        trigger: ".section",
+        start: "top 80%",
+      }
+    });
+  </script>
+</body>
+</html>

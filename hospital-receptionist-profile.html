@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital Receptionist Profile - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 120px 20px 60px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .profile-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+    }
+    .profile-section {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    .profile-image-container {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .profile-image {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid #c0c0c0;
+      margin-bottom: 1rem;
+    }
+    .upload-button {
+      display: none;
+    }
+    .upload-label {
+      display: inline-block;
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .upload-label:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #c0c0c0;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .neon-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .stat-card {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+      color: #fff;
+    }
+    .stat-label {
+      color: #c0c0c0;
+      font-size: 0.875rem;
+    }
+    .activity-list {
+      margin-top: 2rem;
+    }
+    .activity-item {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    .activity-date {
+      color: #c0c0c0;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+    }
+    .activity-description {
+      color: #fff;
+    }
+    .error-message {
+      color: #ff6666;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    .success-message {
+      color: #66ff66;
+      font-size: 16px;
+      margin-top: 1rem;
+      text-align: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+  <a href="hospital-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1 class="animate-title">My Profile</h1>
+
+    <div class="profile-grid animate-content">
+      <!-- Left Column - Profile Image and Basic Info -->
+      <div class="profile-section">
+        <div class="profile-image-container">
+          <img src="default-profile.png" alt="Profile" class="profile-image" id="profileImage">
+          <input type="file" id="imageUpload" class="upload-button" accept="image/*">
+          <label for="imageUpload" class="upload-label">Change Photo</label>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Employee ID</label>
+          <input type="text" class="form-input" id="employeeId" readonly>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <input type="text" class="form-input" value="Hospital Receptionist" readonly>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Join Date</label>
+          <input type="text" class="form-input" id="joinDate" readonly>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-value" id="totalAdmissions">0</div>
+            <div class="stat-label">Admissions</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="totalDischarges">0</div>
+            <div class="stat-label">Discharges</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="emergencyHandled">0</div>
+            <div class="stat-label">Emergencies</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column - Personal Info and Activity -->
+      <div class="profile-section">
+        <form id="profileForm">
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" class="form-input" id="fullName" required>
+            <p class="error-message" id="fullName-error">Please enter your full name</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-input" id="email" required>
+            <p class="error-message" id="email-error">Please enter a valid email address</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Phone</label>
+            <input type="tel" class="form-input" id="phone" required>
+            <p class="error-message" id="phone-error">Please enter a valid phone number</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Address</label>
+            <textarea class="form-input" id="address" rows="3" required></textarea>
+            <p class="error-message" id="address-error">Please enter your address</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Emergency Contact</label>
+            <input type="text" class="form-input" id="emergencyContact" required>
+            <p class="error-message" id="emergencyContact-error">Please enter an emergency contact</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Current Password</label>
+            <input type="password" class="form-input" id="currentPassword">
+            <p class="error-message" id="currentPassword-error">Current password is required to change password</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">New Password</label>
+            <input type="password" class="form-input" id="newPassword">
+            <p class="error-message" id="newPassword-error">Password must be at least 8 characters</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Confirm New Password</label>
+            <input type="password" class="form-input" id="confirmPassword">
+            <p class="error-message" id="confirmPassword-error">Passwords do not match</p>
+          </div>
+
+          <button type="submit" class="neon-button">Save Changes</button>
+          <div class="success-message" id="successMessage"></div>
+        </form>
+
+        <h2 class="text-xl font-bold mt-8 mb-4 gradient-text">Recent Activity</h2>
+        <div class="activity-list" id="activityList">
+          <!-- Activity items will be dynamically added here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    // Load user profile
+    function loadUserProfile() {
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      if (!loggedInUser || loggedInUser.userType !== 'Hospital Receptionist') {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Set profile image
+      if (loggedInUser.profileImage) {
+        document.getElementById('profileImage').src = loggedInUser.profileImage;
+      }
+
+      // Set basic info
+      document.getElementById('employeeId').value = loggedInUser.employeeId || 'HR' + Date.now().toString().slice(-6);
+      document.getElementById('joinDate').value = loggedInUser.joinDate || new Date().toLocaleDateString();
+
+      // Set form values
+      document.getElementById('fullName').value = loggedInUser.fullName || loggedInUser.name || '';
+      document.getElementById('email').value = loggedInUser.email || '';
+      document.getElementById('phone').value = loggedInUser.phone || '';
+      document.getElementById('address').value = loggedInUser.address || '';
+      document.getElementById('emergencyContact').value = loggedInUser.emergencyContact || '';
+
+      // Load statistics
+      updateStats();
+
+      // Load activity
+      loadActivity();
+
+      // Initialize animations
+      initializeAnimations();
+    }
+
+    // Update statistics
+    function updateStats() {
+      const stats = JSON.parse(localStorage.getItem('receptionistStats')) || {
+        admissions: 0,
+        discharges: 0,
+        emergencies: 0
+      };
+
+      document.getElementById('totalAdmissions').textContent = stats.admissions;
+      document.getElementById('totalDischarges').textContent = stats.discharges;
+      document.getElementById('emergencyHandled').textContent = stats.emergencies;
+    }
+
+    // Load activity
+    function loadActivity() {
+      const activityList = document.getElementById('activityList');
+      const activities = JSON.parse(localStorage.getItem('receptionistActivity')) || [];
+
+      activityList.innerHTML = activities.length === 0 ? 
+        '<div class="activity-item">No recent activity</div>' :
+        activities.slice(0, 5).map(activity => `
+          <div class="activity-item">
+            <div class="activity-date">${new Date(activity.date).toLocaleString()}</div>
+            <div class="activity-description">${activity.description}</div>
+          </div>
+        `).join('');
+    }
+
+    // Handle profile image upload
+    document.getElementById('imageUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profileImage').src = e.target.result;
+          
+          // Update user profile
+          const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+          loggedInUser.profileImage = e.target.result;
+          localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Form validation
+    function validateForm() {
+      let isValid = true;
+      const errorMessages = document.querySelectorAll('.error-message');
+      errorMessages.forEach(msg => msg.style.display = 'none');
+
+      // Validate required fields
+      const fullName = document.getElementById('fullName').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const address = document.getElementById('address').value.trim();
+      const emergencyContact = document.getElementById('emergencyContact').value.trim();
+
+      if (!fullName) {
+        document.getElementById('fullName-error').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        document.getElementById('email-error').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!phone || !/^\+?[\d\s-]{10,}$/.test(phone)) {
+        document.getElementById('phone-error').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!address) {
+        document.getElementById('address-error').style.display = 'block';
+        isValid = false;
+      }
+
+      if (!emergencyContact) {
+        document.getElementById('emergencyContact-error').style.display = 'block';
+        isValid = false;
+      }
+
+      // Validate password changes
+      const currentPassword = document.getElementById('currentPassword').value;
+      const newPassword = document.getElementById('newPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+
+      if (newPassword || confirmPassword) {
+        if (!currentPassword) {
+          document.getElementById('currentPassword-error').style.display = 'block';
+          isValid = false;
+        }
+        if (newPassword.length < 8) {
+          document.getElementById('newPassword-error').style.display = 'block';
+          isValid = false;
+        }
+        if (newPassword !== confirmPassword) {
+          document.getElementById('confirmPassword-error').style.display = 'block';
+          isValid = false;
+        }
+      }
+
+      return isValid;
+    }
+
+    // Handle form submission
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      if (!validateForm()) {
+        return;
+      }
+
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+      const updatedUser = {
+        ...loggedInUser,
+        fullName: document.getElementById('fullName').value,
+        name: document.getElementById('fullName').value, // Keep both for compatibility
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        emergencyContact: document.getElementById('emergencyContact').value,
+        userType: 'Hospital Receptionist' // Ensure userType is preserved
+      };
+
+      // Handle password change
+      const newPassword = document.getElementById('newPassword').value;
+      if (newPassword) {
+        updatedUser.password = newPassword;
+      }
+
+      localStorage.setItem('loggedInUser', JSON.stringify(updatedUser));
+
+      // Update in users array if exists
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const userIndex = users.findIndex(u => u.email === updatedUser.email);
+      if (userIndex !== -1) {
+        users[userIndex] = updatedUser;
+        localStorage.setItem('users', JSON.stringify(users));
+      }
+
+      // Add activity
+      const activities = JSON.parse(localStorage.getItem('receptionistActivity')) || [];
+      activities.unshift({
+        date: new Date().toISOString(),
+        description: 'Updated profile information'
+      });
+      localStorage.setItem('receptionistActivity', JSON.stringify(activities));
+
+      // Show success message with animation
+      const successMessage = document.getElementById('successMessage');
+      successMessage.textContent = 'Profile updated successfully!';
+      successMessage.style.opacity = '1';
+      
+      // Reload activity
+      loadActivity();
+
+      // Reset password fields
+      document.getElementById('currentPassword').value = '';
+      document.getElementById('newPassword').value = '';
+      document.getElementById('confirmPassword').value = '';
+
+      // Hide success message after 3 seconds
+      setTimeout(() => {
+        successMessage.style.opacity = '0';
+      }, 3000);
+    });
+
+    // Initialize GSAP animations
+    function initializeAnimations() {
+      gsap.from(".animate-title", {
+        opacity: 0,
+        y: -50,
+        duration: 1,
+        ease: "power3.out"
+      });
+
+      gsap.from(".animate-content", {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        delay: 0.3,
+        ease: "power3.out"
+      });
+
+      gsap.from(".stats-grid", {
+        opacity: 0,
+        scale: 0.8,
+        duration: 0.8,
+        delay: 0.5,
+        ease: "power3.out",
+        stagger: 0.2
+      });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', loadUserProfile);
+  </script>
+</body>
+</html> 

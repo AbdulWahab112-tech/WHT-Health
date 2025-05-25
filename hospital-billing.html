@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital Billing - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 120px 20px 60px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .billing-container {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 15px rgba(192,192,192,0.5);
+    }
+    .bill-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    .bill-card {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .bill-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(192,192,192,0.3);
+    }
+    .bill-card.paid {
+      border-color: #00C851;
+    }
+    .bill-card.pending {
+      border-color: #ffd700;
+    }
+    .bill-card.overdue {
+      border-color: #ff4444;
+    }
+    .status-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.875rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .status-tag.paid {
+      background: rgba(0, 200, 81, 0.2);
+      color: #00C851;
+      border: 1px solid #00C851;
+    }
+    .status-tag.pending {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      border: 1px solid #ffd700;
+    }
+    .status-tag.overdue {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+      border: 1px solid #ff4444;
+    }
+    .neon-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 600px;
+      width: 90%;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .no-bills {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+  <a href="hospital-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1>Hospital Billing</h1>
+
+    <div class="billing-container">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search by patient name, bill ID...">
+      
+      <div class="filters">
+        <button class="filter-button active" data-filter="all">All Bills</button>
+        <button class="filter-button" data-filter="pending">Pending</button>
+        <button class="filter-button" data-filter="paid">Paid</button>
+        <button class="filter-button" data-filter="overdue">Overdue</button>
+      </div>
+
+      <button class="neon-button mb-4" onclick="showNewBillModal()">Create New Bill</button>
+    </div>
+
+    <div class="bill-list" id="billList">
+      <!-- Bills will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- New Bill Modal -->
+  <div class="modal" id="newBillModal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-bold mb-4 gradient-text">Create New Bill</h2>
+      <form id="newBillForm">
+        <div class="form-group">
+          <label class="form-label">Patient Name</label>
+          <input type="text" class="form-input" id="patientName" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Patient ID</label>
+          <input type="text" class="form-input" id="patientId" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Service Type</label>
+          <select class="form-input" id="serviceType" required>
+            <option value="">Select Service Type</option>
+            <option value="consultation">Consultation</option>
+            <option value="hospitalization">Hospitalization</option>
+            <option value="emergency">Emergency Care</option>
+            <option value="surgery">Surgery</option>
+            <option value="laboratory">Laboratory Tests</option>
+            <option value="medication">Medication</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Amount</label>
+          <input type="number" class="form-input" id="amount" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Due Date</label>
+          <input type="date" class="form-input" id="dueDate" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notes</label>
+          <textarea class="form-input" id="notes" rows="3"></textarea>
+        </div>
+        <div class="flex gap-4">
+          <button type="submit" class="neon-button">Create Bill</button>
+          <button type="button" class="neon-button" onclick="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Payment Modal -->
+  <div class="modal" id="paymentModal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-bold mb-4 gradient-text">Process Payment</h2>
+      <form id="paymentForm">
+        <div class="form-group">
+          <label class="form-label">Payment Amount</label>
+          <input type="number" class="form-input" id="paymentAmount" min="0" step="0.01" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payment Method</label>
+          <select class="form-input" id="paymentMethod" required>
+            <option value="">Select Payment Method</option>
+            <option value="cash">Cash</option>
+            <option value="card">Credit/Debit Card</option>
+            <option value="insurance">Insurance</option>
+            <option value="bank">Bank Transfer</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payment Notes</label>
+          <textarea class="form-input" id="paymentNotes" rows="2"></textarea>
+        </div>
+        <input type="hidden" id="billId">
+        <div class="flex gap-4">
+          <button type="submit" class="neon-button">Process Payment</button>
+          <button type="button" class="neon-button" onclick="closeModal()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Load and display bills
+    function loadBills(filter = 'all', searchTerm = '') {
+      const billList = document.getElementById('billList');
+      const bills = JSON.parse(localStorage.getItem('hospitalBills')) || [];
+      
+      // Filter bills
+      let filteredBills = bills;
+      
+      if (filter !== 'all') {
+        filteredBills = bills.filter(bill => bill.status === filter);
+      }
+
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filteredBills = filteredBills.filter(bill => 
+          bill.patientName.toLowerCase().includes(term) ||
+          bill.id.toLowerCase().includes(term)
+        );
+      }
+
+      // Sort by date (newest first)
+      filteredBills.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+      // Clear current list
+      billList.innerHTML = '';
+
+      if (filteredBills.length === 0) {
+        billList.innerHTML = `
+          <div class="no-bills">
+            <h2 class="text-xl mb-2">No Bills Found</h2>
+            <p>No bills match your current search criteria</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Display bills
+      filteredBills.forEach(bill => {
+        const card = document.createElement('div');
+        card.className = `bill-card ${bill.status}`;
+        
+        const dueDate = new Date(bill.dueDate).toLocaleDateString();
+        const createdDate = new Date(bill.createdAt).toLocaleDateString();
+        
+        card.innerHTML = `
+          <div class="status-tag ${bill.status}">
+            ${bill.status.charAt(0).toUpperCase() + bill.status.slice(1)}
+          </div>
+          <h3 class="text-xl font-bold mb-2">${bill.patientName}</h3>
+          <p class="mb-2">Bill ID: ${bill.id}</p>
+          <p class="mb-2">Patient ID: ${bill.patientId}</p>
+          <p class="mb-2">Service: ${bill.serviceType}</p>
+          <p class="mb-2">Amount: $${bill.amount.toFixed(2)}</p>
+          <p class="mb-2">Due Date: ${dueDate}</p>
+          <p class="mb-4">Created: ${createdDate}</p>
+          ${bill.status !== 'paid' ? `
+            <button class="neon-button" onclick="showPaymentModal('${bill.id}', ${bill.amount})">
+              Process Payment
+            </button>
+          ` : ''}
+        `;
+        
+        billList.appendChild(card);
+      });
+    }
+
+    // Show new bill modal
+    function showNewBillModal() {
+      document.getElementById('newBillModal').classList.add('active');
+      document.getElementById('newBillForm').reset();
+      
+      // Set minimum due date to today
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('dueDate').min = today;
+    }
+
+    // Show payment modal
+    function showPaymentModal(billId, amount) {
+      document.getElementById('paymentModal').classList.add('active');
+      document.getElementById('paymentForm').reset();
+      document.getElementById('billId').value = billId;
+      document.getElementById('paymentAmount').value = amount;
+      document.getElementById('paymentAmount').max = amount;
+    }
+
+    // Close modals
+    function closeModal() {
+      document.getElementById('newBillModal').classList.remove('active');
+      document.getElementById('paymentModal').classList.remove('active');
+    }
+
+    // Handle new bill form submission
+    document.getElementById('newBillForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const bill = {
+        id: 'BILL' + Date.now(),
+        patientName: document.getElementById('patientName').value,
+        patientId: document.getElementById('patientId').value,
+        serviceType: document.getElementById('serviceType').value,
+        amount: parseFloat(document.getElementById('amount').value),
+        dueDate: document.getElementById('dueDate').value,
+        notes: document.getElementById('notes').value,
+        status: 'pending',
+        createdAt: new Date().toISOString(),
+        payments: []
+      };
+
+      // Save to localStorage
+      const bills = JSON.parse(localStorage.getItem('hospitalBills')) || [];
+      bills.push(bill);
+      localStorage.setItem('hospitalBills', JSON.stringify(bills));
+
+      // Close modal and reload bills
+      closeModal();
+      const activeFilter = document.querySelector('.filter-button.active');
+      loadBills(activeFilter.dataset.filter, document.getElementById('searchInput').value);
+    });
+
+    // Handle payment form submission
+    document.getElementById('paymentForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const billId = document.getElementById('billId').value;
+      const paymentAmount = parseFloat(document.getElementById('paymentAmount').value);
+      const paymentMethod = document.getElementById('paymentMethod').value;
+      const paymentNotes = document.getElementById('paymentNotes').value;
+
+      const bills = JSON.parse(localStorage.getItem('hospitalBills'));
+      const billIndex = bills.findIndex(bill => bill.id === billId);
+
+      if (billIndex !== -1) {
+        const bill = bills[billIndex];
+        
+        // Add payment to bill
+        bill.payments.push({
+          amount: paymentAmount,
+          method: paymentMethod,
+          notes: paymentNotes,
+          date: new Date().toISOString()
+        });
+
+        // Calculate total paid
+        const totalPaid = bill.payments.reduce((sum, payment) => sum + payment.amount, 0);
+        
+        // Update bill status
+        if (totalPaid >= bill.amount) {
+          bill.status = 'paid';
+        }
+
+        // Save changes
+        localStorage.setItem('hospitalBills', JSON.stringify(bills));
+
+        // Close modal and reload bills
+        closeModal();
+        const activeFilter = document.querySelector('.filter-button.active');
+        loadBills(activeFilter.dataset.filter, document.getElementById('searchInput').value);
+      }
+    });
+
+    // Filter buttons click handler
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadBills(button.dataset.filter, document.getElementById('searchInput').value);
+      });
+    });
+
+    // Search input handler
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const activeFilter = document.querySelector('.filter-button.active');
+      loadBills(activeFilter.dataset.filter, e.target.value);
+    });
+
+    // Close modals when clicking outside
+    document.querySelectorAll('.modal').forEach(modal => {
+      modal.addEventListener('click', function(e) {
+        if (e.target === this) {
+          closeModal();
+        }
+      });
+    });
+
+    // Check for overdue bills
+    function checkOverdueBills() {
+      const bills = JSON.parse(localStorage.getItem('hospitalBills')) || [];
+      const today = new Date();
+
+      bills.forEach(bill => {
+        if (bill.status === 'pending' && new Date(bill.dueDate) < today) {
+          bill.status = 'overdue';
+        }
+      });
+
+      localStorage.setItem('hospitalBills', JSON.stringify(bills));
+    }
+
+    // Initial load
+    checkOverdueBills();
+    loadBills();
+  </script>
+</body>
+</html> 

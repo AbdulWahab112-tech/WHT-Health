@@ -1,0 +1,91 @@
+/* Form Input Styles */
+.form-input {
+  width: 100%;
+  padding: 0.75rem;
+  background: rgba(0, 0, 0, 0.85) !important;
+  border: 2px solid #c0c0c0;
+  border-radius: 8px;
+  color: #fff;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.form-input:focus {
+  outline: none;
+  box-shadow: 0 0 15px #c0c0c0;
+  border-color: #fff;
+}
+
+/* Select Input Styles */
+select.form-input {
+  background: rgba(0, 0, 0, 0.95) !important;
+  color: #fff !important;
+  appearance: none;
+  padding-right: 30px;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23ffffff" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>') !important;
+  background-repeat: no-repeat !important;
+  background-position: right 10px center !important;
+  cursor: pointer;
+}
+
+select.form-input option {
+  background-color: #000;
+  color: #fff;
+  padding: 8px;
+}
+
+/* Textarea Styles */
+textarea.form-input {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+/* Number Input Styles */
+input[type="number"].form-input {
+  -moz-appearance: textfield;
+}
+
+input[type="number"].form-input::-webkit-outer-spin-button,
+input[type="number"].form-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Date and Time Input Styles */
+input[type="date"].form-input,
+input[type="time"].form-input,
+input[type="datetime-local"].form-input {
+  background: rgba(0, 0, 0, 0.95) !important;
+  color: #fff !important;
+  cursor: pointer;
+}
+
+input[type="date"].form-input::-webkit-calendar-picker-indicator,
+input[type="time"].form-input::-webkit-calendar-picker-indicator,
+input[type="datetime-local"].form-input::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+/* Form Label Styles */
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+/* Form Group Styles */
+.form-group {
+  margin-bottom: 1.5rem;
+}
+
+/* Error Message Styles */
+.error-message {
+  color: #ff6666;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: none;
+} 

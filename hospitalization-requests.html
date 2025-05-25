@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospitalization Requests - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 120px 20px 60px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .request-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    .request-card {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .request-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(192,192,192,0.3);
+    }
+    .request-card.pending {
+      border-color: #ffd700;
+    }
+    .request-card.approved {
+      border-color: #00C851;
+    }
+    .request-card.rejected {
+      border-color: #ff4444;
+    }
+    .status-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.875rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .status-tag.pending {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      border: 1px solid #ffd700;
+    }
+    .status-tag.approved {
+      background: rgba(0, 200, 81, 0.2);
+      color: #00C851;
+      border: 1px solid #00C851;
+    }
+    .status-tag.rejected {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+      border: 1px solid #ff4444;
+    }
+    .neon-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .neon-button.approve {
+      border-color: #00C851;
+      color: #00C851;
+    }
+    .neon-button.reject {
+      border-color: #ff4444;
+      color: #ff4444;
+    }
+    .neon-button.approve:hover {
+      box-shadow: 0 0 20px #00C851;
+      background: rgba(0, 200, 81, 0.1);
+    }
+    .neon-button.reject:hover {
+      box-shadow: 0 0 20px #ff4444;
+      background: rgba(255, 68, 68, 0.1);
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .filter-button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 15px rgba(192,192,192,0.5);
+    }
+    .search-bar {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .search-bar:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .no-requests {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+  <a href="hospital-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1>Hospitalization Requests</h1>
+
+    <input type="text" class="search-bar" id="searchInput" placeholder="Search by patient name, doctor, or ID...">
+
+    <div class="filters">
+      <button class="filter-button active" data-filter="all">All Requests</button>
+      <button class="filter-button" data-filter="pending">Pending</button>
+      <button class="filter-button" data-filter="approved">Approved</button>
+      <button class="filter-button" data-filter="rejected">Rejected</button>
+    </div>
+
+    <div class="request-list" id="requestList">
+      <!-- Requests will be dynamically added here -->
+    </div>
+  </div>
+
+  <script>
+    // Load and display requests
+    function loadRequests(filter = 'all', searchTerm = '') {
+      const requestList = document.getElementById('requestList');
+      const requests = JSON.parse(localStorage.getItem('hospitalizationRequests')) || [];
+      
+      // Filter requests
+      let filteredRequests = requests;
+      if (filter !== 'all') {
+        filteredRequests = requests.filter(request => request.status === filter);
+      }
+
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filteredRequests = filteredRequests.filter(request => 
+          request.patientName.toLowerCase().includes(term) ||
+          request.doctorName.toLowerCase().includes(term) ||
+          request.id.toLowerCase().includes(term)
+        );
+      }
+
+      // Sort by date (newest first)
+      filteredRequests.sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+
+      // Clear current list
+      requestList.innerHTML = '';
+
+      if (filteredRequests.length === 0) {
+        requestList.innerHTML = `
+          <div class="no-requests">
+            <h2 class="text-xl mb-2">No Requests Found</h2>
+            <p>No hospitalization requests match your current filters</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Display requests
+      filteredRequests.forEach(request => {
+        const card = document.createElement('div');
+        card.className = `request-card ${request.status}`;
+        
+        const date = new Date(request.requestDate).toLocaleString();
+        
+        card.innerHTML = `
+          <div class="status-tag ${request.status}">
+            ${request.status.charAt(0).toUpperCase() + request.status.slice(1)}
+          </div>
+          <h3 class="text-xl font-bold mb-2">Patient: ${request.patientName}</h3>
+          <p class="mb-2">Request ID: ${request.id}</p>
+          <p class="mb-2">Doctor: ${request.doctorName}</p>
+          <p class="mb-2">Ward: ${request.ward}</p>
+          <p class="mb-2">Requested: ${date}</p>
+          <p class="mb-4">Reason: ${request.reason}</p>
+          ${request.status === 'pending' ? `
+            <button class="neon-button approve" onclick="approveRequest('${request.id}')">
+              Approve Request
+            </button>
+            <button class="neon-button reject" onclick="rejectRequest('${request.id}')">
+              Reject Request
+            </button>
+          ` : `
+            <p class="mb-2">Status Updated: ${new Date(request.statusUpdateDate).toLocaleString()}</p>
+            ${request.bedAssigned ? `<p class="mb-2">Bed Assigned: ${request.bedAssigned}</p>` : ''}
+            ${request.rejectionReason ? `<p class="mb-2">Rejection Reason: ${request.rejectionReason}</p>` : ''}
+          `}
+        `;
+        
+        requestList.appendChild(card);
+      });
+    }
+
+    // Approve request
+    async function approveRequest(requestId) {
+      const beds = JSON.parse(localStorage.getItem('beds')) || [];
+      const availableBeds = beds.filter(bed => !bed.isOccupied);
+
+      if (availableBeds.length === 0) {
+        alert('No beds available. Cannot approve request.');
+        return;
+      }
+
+      const requests = JSON.parse(localStorage.getItem('hospitalizationRequests'));
+      const requestIndex = requests.findIndex(request => request.id === requestId);
+
+      if (requestIndex !== -1) {
+        const request = requests[requestIndex];
+        const bed = availableBeds[0];
+
+        // Update bed status
+        const bedIndex = beds.findIndex(b => b.id === bed.id);
+        beds[bedIndex].isOccupied = true;
+        beds[bedIndex].patient = {
+          name: request.patientName,
+          admissionDate: new Date().toISOString()
+        };
+
+        // Update request status
+        requests[requestIndex] = {
+          ...request,
+          status: 'approved',
+          statusUpdateDate: new Date().toISOString(),
+          bedAssigned: bed.id
+        };
+
+        localStorage.setItem('beds', JSON.stringify(beds));
+        localStorage.setItem('hospitalizationRequests', JSON.stringify(requests));
+
+        // Reload current view
+        const activeFilter = document.querySelector('.filter-button.active');
+        loadRequests(activeFilter.dataset.filter, document.getElementById('searchInput').value);
+      }
+    }
+
+    // Reject request
+    function rejectRequest(requestId) {
+      const reason = prompt('Enter rejection reason:');
+      if (!reason) return;
+
+      const requests = JSON.parse(localStorage.getItem('hospitalizationRequests'));
+      const requestIndex = requests.findIndex(request => request.id === requestId);
+
+      if (requestIndex !== -1) {
+        requests[requestIndex] = {
+          ...requests[requestIndex],
+          status: 'rejected',
+          statusUpdateDate: new Date().toISOString(),
+          rejectionReason: reason
+        };
+
+        localStorage.setItem('hospitalizationRequests', JSON.stringify(requests));
+        
+        // Reload current view
+        const activeFilter = document.querySelector('.filter-button.active');
+        loadRequests(activeFilter.dataset.filter, document.getElementById('searchInput').value);
+      }
+    }
+
+    // Filter buttons click handler
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadRequests(button.dataset.filter, document.getElementById('searchInput').value);
+      });
+    });
+
+    // Search input handler
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const activeFilter = document.querySelector('.filter-button.active');
+      loadRequests(activeFilter.dataset.filter, e.target.value);
+    });
+
+    // Initial load
+    loadRequests();
+  </script>
+</body>
+</html> 

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Hospitalized Patients - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 80px 20px 40px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: rgba(0,0,0,0.85);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      box-shadow: 0 0 30px #222;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.5rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .search-section {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .input-field {
+      padding: 12px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      font-size: 1rem;
+      width: 250px;
+    }
+    .input-field:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .search-btn {
+      padding: 12px 24px;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .search-btn:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .patient-card {
+      background: rgba(0,0,0,0.7);
+      border: 2px solid #c0c0c0;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    .patient-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 20px rgba(192,192,192,0.3);
+    }
+    .patient-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid rgba(192,192,192,0.3);
+    }
+    .patient-name {
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #c0c0c0;
+    }
+    .patient-info {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .info-item {
+      display: flex;
+      flex-direction: column;
+    }
+    .info-label {
+      font-size: 0.9rem;
+      color: #888;
+      margin-bottom: 0.2rem;
+    }
+    .info-value {
+      font-size: 1.1rem;
+      color: #fff;
+    }
+    .action-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .action-btn {
+      padding: 8px 16px;
+      border: 1px solid #c0c0c0;
+      border-radius: 6px;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .action-btn:hover {
+      background: rgba(192,192,192,0.1);
+      box-shadow: 0 0 10px rgba(192,192,192,0.3);
+    }
+    .back-btn {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: rgba(0,0,0,0.7);
+      color: #fff;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .back-btn:hover {
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .filter-btn {
+      padding: 8px 16px;
+      border: 1px solid #c0c0c0;
+      border-radius: 6px;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .filter-btn.active {
+      background: rgba(192,192,192,0.2);
+      box-shadow: 0 0 10px rgba(192,192,192,0.3);
+    }
+    .no-results {
+      text-align: center;
+      color: #888;
+      padding: 2rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="nurse-dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1>Search Hospitalized Patients</h1>
+    
+    <div class="search-section">
+      <input type="text" class="input-field" id="patientId" placeholder="Patient ID">
+      <input type="text" class="input-field" id="bedNumber" placeholder="Bed Number">
+      <input type="text" class="input-field" id="patientName" placeholder="Patient Name">
+      <button class="search-btn" onclick="searchPatients()">Search</button>
+    </div>
+
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterPatients('all')">All Patients</button>
+      <button class="filter-btn" onclick="filterPatients('critical')">Critical</button>
+      <button class="filter-btn" onclick="filterPatients('stable')">Stable</button>
+      <button class="filter-btn" onclick="filterPatients('recovering')">Recovering</button>
+    </div>
+
+    <div id="searchResults">
+      <!-- Patient cards will be dynamically inserted here -->
+    </div>
+  </div>
+
+  <script>
+    // Check authentication and load nurse data
+    document.addEventListener('DOMContentLoaded', function() {
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+      
+      // Load initial data
+      loadPatients();
+    });
+
+    function loadPatients() {
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+      const wardPatients = patients.filter(patient => 
+        patient.hospitalized === true && patient.ward === loggedInUser.ward
+      );
+
+      displayPatients(wardPatients);
+    }
+
+    function displayPatients(patients) {
+      const resultsDiv = document.getElementById('searchResults');
+      resultsDiv.innerHTML = '';
+
+      if (patients.length === 0) {
+        resultsDiv.innerHTML = '<div class="no-results">No patients found matching your criteria</div>';
+        return;
+      }
+
+      patients.forEach(patient => {
+        const card = document.createElement('div');
+        card.className = 'patient-card';
+        card.innerHTML = `
+          <div class="patient-header">
+            <span class="patient-name">${patient.name}</span>
+            <span class="patient-id">ID: ${patient.id}</span>
+          </div>
+          <div class="patient-info">
+            <div class="info-item">
+              <span class="info-label">Bed Number</span>
+              <span class="info-value">${patient.bedNumber}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Ward</span>
+              <span class="info-value">${patient.ward}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Status</span>
+              <span class="info-value">${patient.status}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Admission Date</span>
+              <span class="info-value">${patient.admissionDate}</span>
+            </div>
+          </div>
+          <div class="action-buttons">
+            <button class="action-btn" onclick="viewDetails('${patient.id}')">View Details</button>
+            <button class="action-btn" onclick="viewProgress('${patient.id}')">View Progress</button>
+            <button class="action-btn" onclick="addNotes('${patient.id}')">Add Notes</button>
+          </div>
+        `;
+        resultsDiv.appendChild(card);
+      });
+    }
+
+    function searchPatients() {
+      const patientId = document.getElementById('patientId').value.toLowerCase();
+      const bedNumber = document.getElementById('bedNumber').value.toLowerCase();
+      const patientName = document.getElementById('patientName').value.toLowerCase();
+
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+      const wardPatients = patients.filter(patient => 
+        patient.hospitalized === true && patient.ward === loggedInUser.ward &&
+        (patient.id.toLowerCase().includes(patientId) ||
+         patient.bedNumber.toLowerCase().includes(bedNumber) ||
+         patient.name.toLowerCase().includes(patientName))
+      );
+
+      displayPatients(wardPatients);
+    }
+
+    function filterPatients(status) {
+      // Update active filter button
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || {};
+      const wardPatients = patients.filter(patient => 
+        patient.hospitalized === true && patient.ward === loggedInUser.ward &&
+        (status === 'all' || patient.status === status)
+      );
+
+      displayPatients(wardPatients);
+    }
+
+    function viewDetails(patientId) {
+      window.location.href = `patient-details.html?id=${patientId}`;
+    }
+
+    function viewProgress(patientId) {
+      window.location.href = `nurse-patient-progress.html?id=${patientId}`;
+    }
+
+    function addNotes(patientId) {
+      window.location.href = `write-nurse-notes.html?id=${patientId}`;
+    }
+  </script>
+</body>
+</html>

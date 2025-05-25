@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Hospital Beds - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 120px 20px 60px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .ward-section {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    .ward-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #c0c0c0;
+      margin-bottom: 1rem;
+    }
+    .beds-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+    .bed-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      transition: all 0.3s ease;
+    }
+    .bed-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px rgba(192,192,192,0.3);
+    }
+    .bed-card.occupied {
+      border-color: #ff4444;
+    }
+    .bed-card.available {
+      border-color: #00C851;
+    }
+    .bed-status {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.875rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    .bed-status.occupied {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+      border: 1px solid #ff4444;
+    }
+    .bed-status.available {
+      background: rgba(0, 200, 81, 0.2);
+      color: #00C851;
+      border: 1px solid #00C851;
+    }
+    .neon-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+      color: #fff;
+    }
+    .stat-label {
+      color: #c0c0c0;
+      font-size: 0.875rem;
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .filter-button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 15px rgba(192,192,192,0.5);
+    }
+  </style>
+</head>
+<body>
+  <a href="hospital-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1>Manage Hospital Beds</h1>
+
+    <!-- Statistics -->
+    <div class="stats-container">
+      <div class="stat-card">
+        <div class="stat-value" id="totalBeds">0</div>
+        <div class="stat-label">Total Beds</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="availableBeds">0</div>
+        <div class="stat-label">Available Beds</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="occupiedBeds">0</div>
+        <div class="stat-label">Occupied Beds</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value" id="occupancyRate">0%</div>
+        <div class="stat-label">Occupancy Rate</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters">
+      <button class="filter-button active" data-filter="all">All Beds</button>
+      <button class="filter-button" data-filter="available">Available</button>
+      <button class="filter-button" data-filter="occupied">Occupied</button>
+      <button class="filter-button" data-filter="general">General Ward</button>
+      <button class="filter-button" data-filter="icu">ICU</button>
+      <button class="filter-button" data-filter="emergency">Emergency</button>
+    </div>
+
+    <!-- Wards -->
+    <div id="wardsContainer">
+      <!-- Wards will be dynamically added here -->
+    </div>
+  </div>
+
+  <script>
+    // Initialize beds if not exists
+    if (!localStorage.getItem('beds')) {
+      const initialBeds = [
+        ...Array(20).fill().map((_, i) => ({
+          id: `GW${i + 1}`,
+          number: i + 1,
+          ward: 'General Ward',
+          isOccupied: false,
+          patient: null
+        })),
+        ...Array(10).fill().map((_, i) => ({
+          id: `ICU${i + 1}`,
+          number: i + 1,
+          ward: 'ICU',
+          isOccupied: false,
+          patient: null
+        })),
+        ...Array(5).fill().map((_, i) => ({
+          id: `EM${i + 1}`,
+          number: i + 1,
+          ward: 'Emergency',
+          isOccupied: false,
+          patient: null
+        }))
+      ];
+      localStorage.setItem('beds', JSON.stringify(initialBeds));
+    }
+
+    // Load and display beds
+    function loadBeds(filter = 'all') {
+      const wardsContainer = document.getElementById('wardsContainer');
+      const beds = JSON.parse(localStorage.getItem('beds')) || [];
+      
+      // Filter beds
+      let filteredBeds = beds;
+      if (filter !== 'all') {
+        filteredBeds = beds.filter(bed => {
+          switch(filter) {
+            case 'available':
+              return !bed.isOccupied;
+            case 'occupied':
+              return bed.isOccupied;
+            case 'general':
+              return bed.ward === 'General Ward';
+            case 'icu':
+              return bed.ward === 'ICU';
+            case 'emergency':
+              return bed.ward === 'Emergency';
+            default:
+              return true;
+          }
+        });
+      }
+
+      // Group beds by ward
+      const wardGroups = {};
+      filteredBeds.forEach(bed => {
+        if (!wardGroups[bed.ward]) {
+          wardGroups[bed.ward] = [];
+        }
+        wardGroups[bed.ward].push(bed);
+      });
+
+      // Clear container
+      wardsContainer.innerHTML = '';
+
+      // Create ward sections
+      Object.entries(wardGroups).forEach(([ward, beds]) => {
+        const wardSection = document.createElement('div');
+        wardSection.className = 'ward-section';
+        
+        wardSection.innerHTML = `
+          <h2 class="ward-title">${ward}</h2>
+          <div class="beds-grid">
+            ${beds.map(bed => `
+              <div class="bed-card ${bed.isOccupied ? 'occupied' : 'available'}">
+                <div class="bed-status ${bed.isOccupied ? 'occupied' : 'available'}">
+                  ${bed.isOccupied ? 'Occupied' : 'Available'}
+                </div>
+                <h3 class="font-bold mb-2">Bed ${bed.id}</h3>
+                ${bed.isOccupied ? `
+                  <p class="mb-1">Patient: ${bed.patient.name}</p>
+                  <p class="mb-1">Since: ${new Date(bed.patient.admissionDate).toLocaleDateString()}</p>
+                  <button class="neon-button" onclick="releaseBed('${bed.id}')">
+                    Release Bed
+                  </button>
+                ` : `
+                  <button class="neon-button" onclick="assignBed('${bed.id}')">
+                    Assign Bed
+                  </button>
+                `}
+              </div>
+            `).join('')}
+          </div>
+        `;
+        
+        wardsContainer.appendChild(wardSection);
+      });
+
+      // Update statistics
+      updateStats();
+    }
+
+    // Update statistics
+    function updateStats() {
+      const beds = JSON.parse(localStorage.getItem('beds')) || [];
+      const totalBeds = beds.length;
+      const occupiedBeds = beds.filter(bed => bed.isOccupied).length;
+      const availableBeds = totalBeds - occupiedBeds;
+      const occupancyRate = Math.round((occupiedBeds / totalBeds) * 100);
+
+      document.getElementById('totalBeds').textContent = totalBeds;
+      document.getElementById('availableBeds').textContent = availableBeds;
+      document.getElementById('occupiedBeds').textContent = occupiedBeds;
+      document.getElementById('occupancyRate').textContent = `${occupancyRate}%`;
+    }
+
+    // Assign bed to patient
+    function assignBed(bedId) {
+      const patientName = prompt('Enter patient name:');
+      if (!patientName) return;
+
+      const beds = JSON.parse(localStorage.getItem('beds'));
+      const bedIndex = beds.findIndex(bed => bed.id === bedId);
+
+      if (bedIndex !== -1) {
+        beds[bedIndex].isOccupied = true;
+        beds[bedIndex].patient = {
+          name: patientName,
+          admissionDate: new Date().toISOString()
+        };
+
+        localStorage.setItem('beds', JSON.stringify(beds));
+        
+        // Reload current view
+        const activeFilter = document.querySelector('.filter-button.active');
+        loadBeds(activeFilter.dataset.filter);
+      }
+    }
+
+    // Release bed
+    function releaseBed(bedId) {
+      if (!confirm('Are you sure you want to release this bed?')) return;
+
+      const beds = JSON.parse(localStorage.getItem('beds'));
+      const bedIndex = beds.findIndex(bed => bed.id === bedId);
+
+      if (bedIndex !== -1) {
+        beds[bedIndex].isOccupied = false;
+        beds[bedIndex].patient = null;
+
+        localStorage.setItem('beds', JSON.stringify(beds));
+        
+        // Reload current view
+        const activeFilter = document.querySelector('.filter-button.active');
+        loadBeds(activeFilter.dataset.filter);
+      }
+    }
+
+    // Filter buttons click handler
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadBeds(button.dataset.filter);
+      });
+    });
+
+    // Initial load
+    loadBeds();
+  </script>
+</body>
+</html> 

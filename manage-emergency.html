@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Emergency Cases - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 120px 20px 60px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .emergency-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .emergency-card {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .emergency-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(192,192,192,0.3);
+    }
+    .emergency-card.critical {
+      border-color: #ff0000;
+    }
+    .emergency-card.serious {
+      border-color: #ff8c00;
+    }
+    .emergency-card.urgent {
+      border-color: #ffd700;
+    }
+    .emergency-card.non-urgent {
+      border-color: #32cd32;
+    }
+    .severity-tag {
+      display: inline-block;
+      padding: 0.25rem 0.75rem;
+      border-radius: 15px;
+      font-size: 0.875rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+    .severity-tag.critical {
+      background: rgba(255, 0, 0, 0.2);
+      color: #ff0000;
+      border: 1px solid #ff0000;
+    }
+    .severity-tag.serious {
+      background: rgba(255, 140, 0, 0.2);
+      color: #ff8c00;
+      border: 1px solid #ff8c00;
+    }
+    .severity-tag.urgent {
+      background: rgba(255, 215, 0, 0.2);
+      color: #ffd700;
+      border: 1px solid #ffd700;
+    }
+    .severity-tag.non-urgent {
+      background: rgba(50, 205, 50, 0.2);
+      color: #32cd32;
+      border: 1px solid #32cd32;
+    }
+    .neon-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 1rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+    }
+    .filter-button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 15px rgba(192,192,192,0.5);
+    }
+    .search-bar {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      margin-bottom: 1rem;
+    }
+    .search-bar:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .no-cases {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+  <a href="hospital-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1>Manage Emergency Cases</h1>
+
+    <input type="text" class="search-bar" id="searchInput" placeholder="Search by name, ID, or type...">
+
+    <div class="filters">
+      <button class="filter-button active" data-filter="all">All Cases</button>
+      <button class="filter-button" data-filter="critical">Critical</button>
+      <button class="filter-button" data-filter="serious">Serious</button>
+      <button class="filter-button" data-filter="urgent">Urgent</button>
+      <button class="filter-button" data-filter="non-urgent">Non-Urgent</button>
+      <button class="filter-button" data-filter="active">Active</button>
+      <button class="filter-button" data-filter="completed">Completed</button>
+    </div>
+
+    <div class="emergency-list" id="emergencyList">
+      <!-- Emergency cases will be dynamically added here -->
+    </div>
+  </div>
+
+  <script>
+    // Load and display emergency cases
+    function loadEmergencyCases(filter = 'all', searchTerm = '') {
+      const emergencyList = document.getElementById('emergencyList');
+      const cases = JSON.parse(localStorage.getItem('emergencyCases')) || [];
+      
+      // Filter and sort cases
+      let filteredCases = cases;
+      
+      if (filter !== 'all') {
+        filteredCases = cases.filter(case_ => {
+          if (['critical', 'serious', 'urgent', 'non-urgent'].includes(filter)) {
+            return case_.severityLevel === filter;
+          }
+          return case_.status === filter;
+        });
+      }
+
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filteredCases = filteredCases.filter(case_ => 
+          case_.firstName.toLowerCase().includes(term) ||
+          case_.lastName.toLowerCase().includes(term) ||
+          case_.id.toLowerCase().includes(term) ||
+          case_.emergencyType.toLowerCase().includes(term)
+        );
+      }
+
+      // Sort by severity and date
+      filteredCases.sort((a, b) => {
+        const severityOrder = {
+          'critical': 0,
+          'serious': 1,
+          'urgent': 2,
+          'non-urgent': 3
+        };
+        
+        if (a.severityLevel !== b.severityLevel) {
+          return severityOrder[a.severityLevel] - severityOrder[b.severityLevel];
+        }
+        
+        return new Date(b.registrationDate) - new Date(a.registrationDate);
+      });
+
+      // Clear current list
+      emergencyList.innerHTML = '';
+
+      if (filteredCases.length === 0) {
+        emergencyList.innerHTML = `
+          <div class="no-cases">
+            <h2 class="text-xl mb-2">No Emergency Cases Found</h2>
+            <p>No cases match your current filters</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Display cases
+      filteredCases.forEach(case_ => {
+        const card = document.createElement('div');
+        card.className = `emergency-card ${case_.severityLevel}`;
+        
+        const date = new Date(case_.registrationDate).toLocaleString();
+        
+        card.innerHTML = `
+          <div class="severity-tag ${case_.severityLevel}">
+            ${case_.severityLevel.charAt(0).toUpperCase() + case_.severityLevel.slice(1)}
+          </div>
+          <h3 class="text-xl font-bold mb-2">${case_.firstName} ${case_.lastName}</h3>
+          <p class="mb-2">ID: ${case_.id}</p>
+          <p class="mb-2">Type: ${case_.emergencyType}</p>
+          <p class="mb-2">Age: ${case_.age} | Gender: ${case_.gender}</p>
+          <p class="mb-2">Status: ${case_.status}</p>
+          <p class="mb-2">Registered: ${date}</p>
+          <p class="mb-4">${case_.description}</p>
+          <button class="neon-button" onclick="updateStatus('${case_.id}')">
+            ${case_.status === 'active' ? 'Mark as Completed' : 'Reactivate Case'}
+          </button>
+          <button class="neon-button" onclick="viewDetails('${case_.id}')">
+            View Full Details
+          </button>
+        `;
+        
+        emergencyList.appendChild(card);
+      });
+    }
+
+    // Update case status
+    function updateStatus(id) {
+      const cases = JSON.parse(localStorage.getItem('emergencyCases')) || [];
+      const caseIndex = cases.findIndex(case_ => case_.id === id);
+      
+      if (caseIndex !== -1) {
+        cases[caseIndex].status = cases[caseIndex].status === 'active' ? 'completed' : 'active';
+        localStorage.setItem('emergencyCases', JSON.stringify(cases));
+        
+        // Reload the current view
+        const activeFilter = document.querySelector('.filter-button.active');
+        loadEmergencyCases(activeFilter.dataset.filter, document.getElementById('searchInput').value);
+      }
+    }
+
+    // View full case details
+    function viewDetails(id) {
+      const cases = JSON.parse(localStorage.getItem('emergencyCases')) || [];
+      const case_ = cases.find(case_ => case_.id === id);
+      
+      if (case_) {
+        const details = `
+          Emergency Case Details:
+          
+          Patient Information:
+          - Name: ${case_.firstName} ${case_.lastName}
+          - ID: ${case_.id}
+          - Age: ${case_.age}
+          - Gender: ${case_.gender}
+          
+          Emergency Details:
+          - Type: ${case_.emergencyType}
+          - Severity: ${case_.severityLevel}
+          - Status: ${case_.status}
+          - Description: ${case_.description}
+          
+          Emergency Contact:
+          - Name: ${case_.emergencyContact.name}
+          - Phone: ${case_.emergencyContact.phone}
+          - Relationship: ${case_.emergencyContact.relationship}
+          
+          Registration Date: ${new Date(case_.registrationDate).toLocaleString()}
+        `;
+        
+        alert(details);
+      }
+    }
+
+    // Filter buttons click handler
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadEmergencyCases(button.dataset.filter, document.getElementById('searchInput').value);
+      });
+    });
+
+    // Search input handler
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const activeFilter = document.querySelector('.filter-button.active');
+      loadEmergencyCases(activeFilter.dataset.filter, e.target.value);
+    });
+
+    // Initial load
+    loadEmergencyCases();
+  </script>
+</body>
+</html> 

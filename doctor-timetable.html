@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Timetable - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #000; background-image: url('wahab.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; color: #fff; font-family: 'Arial', sans-serif; min-height: 100vh; margin: 0; padding: 80px 20px 40px; }
+    .container { max-width: 900px; margin: 0 auto; }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .back-button { position: fixed; top: 20px; left: 20px; padding: 10px 20px; color: #fff; text-decoration: none; border: 2px solid #c0c0c0; border-radius: 8px; font-weight: bold; background: rgba(0,0,0,0.5); transition: all 0.3s; z-index: 1000; }
+    .back-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); text-shadow: 0 0 5px #fff; }
+    .section { background: rgba(0,0,0,0.8); border: 2px solid #c0c0c0; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; }
+    .section-title { font-size: 1.3rem; font-weight: bold; color: #c0c0c0; margin-bottom: 1rem; }
+    .timetable-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    .timetable-table th, .timetable-table td { border: 1px solid #c0c0c0; padding: 0.7rem; text-align: center; }
+    .timetable-table th { background: rgba(192,192,192,0.1); color: #c0c0c0; }
+    .timetable-table td { background: rgba(0,0,0,0.6); color: #fff; }
+  </style>
+</head>
+<body>
+  <a href="doctor-dashboard.html" class="back-button">← Back to Dashboard</a>
+  <div class="container">
+    <h1>My Timetable</h1>
+    <div class="section">
+      <div class="section-title">Weekly Timetable</div>
+      <table class="timetable-table">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Shift</th>
+            <th>Duty Call</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Monday</td><td>Morning</td><td>-</td></tr>
+          <tr><td>Tuesday</td><td>Evening</td><td>-</td></tr>
+          <tr><td>Wednesday</td><td>Night</td><td>Yes</td></tr>
+          <tr><td>Thursday</td><td>Morning</td><td>-</td></tr>
+          <tr><td>Friday</td><td>Evening</td><td>-</td></tr>
+          <tr><td>Saturday</td><td>Night</td><td>-</td></tr>
+          <tr><td>Sunday</td><td>Off</td><td>-</td></tr>
+        </tbody>
+      </table>
+      <div class="section-title">Duty Call Schedule</div>
+      <div style="color:#fff;">Next Duty Call: <span style="color:#66ff66;">Wednesday Night</span></div>
+    </div>
+  </div>
+</body>
+</html> 

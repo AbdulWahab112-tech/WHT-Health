@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Doctor Hospitalization Requests - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #000; background-image: url('wahab.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; color: #fff; font-family: 'Arial', sans-serif; min-height: 100vh; margin: 0; padding: 80px 20px 40px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .back-button { position: fixed; top: 20px; left: 20px; padding: 10px 20px; color: #fff; text-decoration: none; border: 2px solid #c0c0c0; border-radius: 8px; font-weight: bold; background: rgba(0,0,0,0.5); transition: all 0.3s; z-index: 1000; }
+    .back-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); text-shadow: 0 0 5px #fff; }
+    .section { background: rgba(0,0,0,0.8); border: 2px solid #c0c0c0; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; }
+    .section-title { font-size: 1.3rem; font-weight: bold; color: #c0c0c0; margin-bottom: 1rem; }
+    .request-list { margin-bottom: 1.5rem; }
+    .request-card { background: rgba(0,0,0,0.6); border: 1px solid #c0c0c0; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+    .form-group { margin-bottom: 1rem; }
+    .form-label { color: #c0c0c0; font-weight: bold; margin-bottom: 0.3rem; display: block; }
+    .form-input, .form-select { width: 100%; padding: 0.7rem; background: rgba(255,255,255,0.1); border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; margin-bottom: 0.5rem; }
+    .form-input:focus, .form-select:focus { outline: none; box-shadow: 0 0 10px #c0c0c0; }
+    .neon-button { width: 100%; padding: 0.7rem; background: transparent; border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; margin-top: 0.5rem; }
+    .neon-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); }
+  </style>
+</head>
+<body>
+  <a href="doctor-dashboard.html" class="back-button">← Back to Dashboard</a>
+  <div class="container">
+    <h1>Hospitalization Requests</h1>
+    <div class="section">
+      <div class="section-title">Pending/Completed Requests</div>
+      <div class="request-list" id="requestList">
+        <!-- Requests will be listed here -->
+        <div class="request-card">No requests found.</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Send New Hospitalization Request</div>
+      <form id="hospitalizationRequestForm">
+        <div class="form-group">
+          <label class="form-label">Patient ID</label>
+          <input type="text" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ward</label>
+          <input type="text" class="form-input" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Reason</label>
+          <textarea class="form-input" rows="3" required></textarea>
+        </div>
+        <button type="submit" class="neon-button">Send Request</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    // --- Hospitalization Requests Logic ---
+    // Utility: Generate unique ID
+    function generateId() {
+      return 'HR' + Date.now() + Math.floor(Math.random() * 1000);
+    }
+
+    // Get logged-in doctor info
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const doctor = users.find(u => u.email === loggedInUserEmail && u.userType === 'Doctor');
+
+    // Load and display requests for this doctor
+    function loadRequests() {
+      const requestList = document.getElementById('requestList');
+      const allRequests = JSON.parse(localStorage.getItem('requests')) || [];
+      // Only show this doctor's requests of type 'hospitalization'
+      const requests = allRequests.filter(r => r.type === 'hospitalization' && r.doctorEmail === loggedInUserEmail);
+      requestList.innerHTML = '';
+      if (requests.length === 0) {
+        requestList.innerHTML = '<div class="request-card">No requests found.</div>';
+        return;
+      }
+      requests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+      requests.forEach(r => {
+        const card = document.createElement('div');
+        card.className = 'request-card';
+        let statusColor = '#ffd700';
+        let statusText = 'Pending';
+        if (r.status === 'approved') { statusColor = '#00C851'; statusText = 'Approved'; }
+        if (r.status === 'rejected') { statusColor = '#ff4444'; statusText = 'Rejected'; }
+        card.innerHTML = `
+          <div style="font-weight:bold;color:${statusColor};margin-bottom:0.5rem;">${statusText}</div>
+          <div><b>Patient ID:</b> ${r.patientId}</div>
+          <div><b>Ward:</b> ${r.ward}</div>
+          <div><b>Reason:</b> ${r.reason}</div>
+          <div><b>Requested:</b> ${new Date(r.timestamp).toLocaleString()}</div>
+          ${r.status === 'rejected' && r.rejectionReason ? `<div><b>Rejection Reason:</b> ${r.rejectionReason}</div>` : ''}
+          ${r.status === 'approved' && r.bedAssigned ? `<div><b>Bed Assigned:</b> ${r.bedAssigned}</div>` : ''}
+        `;
+        requestList.appendChild(card);
+      });
+    }
+
+    // Handle form submission
+    document.getElementById('hospitalizationRequestForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const form = e.target;
+      const patientId = form.querySelectorAll('.form-input')[0].value.trim();
+      const ward = form.querySelectorAll('.form-input')[1].value.trim();
+      const reason = form.querySelectorAll('.form-input')[2].value.trim();
+      if (!patientId || !ward || !reason) {
+        alert('Please fill in all fields.');
+        return;
+      }
+      const allRequests = JSON.parse(localStorage.getItem('requests')) || [];
+      allRequests.push({
+        id: generateId(),
+        type: 'hospitalization',
+        doctorEmail: loggedInUserEmail,
+        patientId,
+        ward,
+        reason,
+        status: 'pending',
+        timestamp: new Date().toISOString()
+      });
+      localStorage.setItem('requests', JSON.stringify(allRequests));
+      form.reset();
+      loadRequests();
+      alert('Hospitalization request sent!');
+    });
+
+    // Initial load
+    loadRequests();
+  </script>
+</body>
+</html> 

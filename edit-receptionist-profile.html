@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Profile - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 2rem;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      border: 2px solid #c0c0c0;
+      backdrop-filter: blur(5px);
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .profile-image {
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      border: 3px solid #c0c0c0;
+      margin: 0 auto 1rem;
+      display: block;
+      object-fit: cover;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      margin: 10px;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .error-message {
+      color: #ff6666;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <a href="receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <!-- Main Content -->
+  <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4">
+    <h1 class="gradient-text animate-title">EDIT PROFILE</h1>
+    
+    <div class="form-container">
+      <img src="default-avatar.png" alt="Profile" id="profile-image" class="profile-image">
+      
+      <form id="edit-profile-form">
+        <div class="form-group">
+          <label for="profileImage" class="form-label">Profile Image</label>
+          <input type="file" id="profileImage" name="profileImage" class="form-input" accept="image/*">
+        </div>
+
+        <div class="form-group">
+          <label for="fullName" class="form-label">Full Name</label>
+          <input type="text" id="fullName" name="fullName" class="form-input" required>
+          <p class="error-message" id="fullName-error">Please enter your full name.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" id="email" name="email" class="form-input" required readonly>
+        </div>
+
+        <div class="form-group">
+          <label for="phone" class="form-label">Phone Number</label>
+          <input type="tel" id="phone" name="phone" class="form-input" required>
+          <p class="error-message" id="phone-error">Please enter a valid phone number.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="password" class="form-label">New Password (leave blank to keep current)</label>
+          <input type="password" id="password" name="password" class="form-input">
+          <p class="error-message" id="password-error">Password must be at least 8 characters.</p>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmPassword" class="form-label">Confirm New Password</label>
+          <input type="password" id="confirmPassword" name="confirmPassword" class="form-input">
+          <p class="error-message" id="confirmPassword-error">Passwords do not match.</p>
+        </div>
+
+        <button type="submit" class="neon-button w-full">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    // Check authentication
+    const loggedInUserEmail = localStorage.getItem('loggedInUserEmail');
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const receptionist = users.find(user => user.email === loggedInUserEmail && user.userType === 'Receptionist');
+
+    if (!receptionist) {
+      alert('Please log in as a Receptionist to edit your profile.');
+      window.location.href = 'login.html';
+    }
+
+    // Populate form with current data
+    document.getElementById('fullName').value = receptionist.fullName;
+    document.getElementById('email').value = receptionist.email;
+    document.getElementById('phone').value = receptionist.phone || '';
+    if (receptionist.profileImage) {
+      document.getElementById('profile-image').src = receptionist.profileImage;
+    }
+
+    // Handle profile image upload
+    document.getElementById('profileImage').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profile-image').src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Handle form submission
+    document.getElementById('edit-profile-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      // Reset error messages
+      document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+      
+      // Validate inputs
+      let hasError = false;
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      
+      if (!fullName) {
+        document.getElementById('fullName-error').style.display = 'block';
+        hasError = true;
+      }
+      
+      if (!phone.match(/^\+?[\d\s-]{10,}$/)) {
+        document.getElementById('phone-error').style.display = 'block';
+        hasError = true;
+      }
+      
+      if (password) {
+        if (password.length < 8) {
+          document.getElementById('password-error').style.display = 'block';
+          hasError = true;
+        }
+        if (password !== confirmPassword) {
+          document.getElementById('confirmPassword-error').style.display = 'block';
+          hasError = true;
+        }
+      }
+      
+      if (hasError) return;
+
+      // Update user data
+      const userIndex = users.findIndex(user => user.email === loggedInUserEmail);
+      if (userIndex !== -1) {
+        users[userIndex] = {
+          ...users[userIndex],
+          fullName,
+          phone,
+          profileImage: document.getElementById('profile-image').src,
+          ...(password && { password })
+        };
+        
+        localStorage.setItem('users', JSON.stringify(users));
+        
+        // Show success message and redirect
+        const successMessage = document.createElement('p');
+        successMessage.textContent = 'Profile updated successfully!';
+        successMessage.className = 'gradient-text text-lg mt-4 text-center';
+        document.querySelector('.form-container').appendChild(successMessage);
+        
+        setTimeout(() => {
+          window.location.href = 'receptionist-dashboard.html';
+        }, 1500);
+      }
+    });
+
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".form-container", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+  </script>
+</body>
+</html> 

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Set Timetable - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body { background-color: #000; background-image: url('wahab.png'); background-size: cover; background-position: center; background-repeat: no-repeat; background-attachment: fixed; color: #fff; font-family: 'Arial', sans-serif; min-height: 100vh; margin: 0; padding: 80px 20px 40px; }
+    .container { max-width: 700px; margin: 0 auto; }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover { text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0; }
+    .back-button { position: fixed; top: 20px; left: 20px; padding: 10px 20px; color: #fff; text-decoration: none; border: 2px solid #c0c0c0; border-radius: 8px; font-weight: bold; background: rgba(0,0,0,0.5); transition: all 0.3s; z-index: 1000; }
+    .back-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); text-shadow: 0 0 5px #fff; }
+    .section { background: rgba(0,0,0,0.8); border: 2px solid #c0c0c0; border-radius: 15px; padding: 2rem; margin-bottom: 2rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    .form-label { color: #c0c0c0; font-weight: bold; margin-bottom: 0.3rem; display: block; }
+    .form-input, .form-select { width: 100%; padding: 0.7rem; background: rgba(255,255,255,0.1); border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; margin-bottom: 0.5rem; }
+    .form-input:focus, .form-select:focus { outline: none; box-shadow: 0 0 10px #c0c0c0; }
+    .neon-button { width: 100%; padding: 0.7rem; background: transparent; border: 2px solid #c0c0c0; border-radius: 8px; color: #fff; font-weight: bold; text-transform: uppercase; cursor: pointer; transition: all 0.3s; margin-top: 0.5rem; }
+    .neon-button:hover { box-shadow: 0 0 20px #c0c0c0; background: rgba(192,192,192,0.1); }
+    .error-msg { color: #ff6666; font-weight: bold; margin-bottom: 1rem; text-align: center; }
+    .success-msg { color: #66ff66; font-weight: bold; margin-bottom: 1rem; text-align: center; }
+    .timetable-table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; }
+    .timetable-table th, .timetable-table td { border: 1px solid #c0c0c0; padding: 0.7rem; text-align: center; }
+    .timetable-table th { background: rgba(192,192,192,0.1); color: #c0c0c0; }
+    .timetable-table td { background: rgba(0,0,0,0.6); color: #fff; }
+    /* Black scrollbar for all browsers */
+    ::-webkit-scrollbar {
+      width: 10px;
+      background: #000;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #000;
+    }
+    /* For Firefox */
+    html {
+      scrollbar-color: #222 #000;
+      scrollbar-width: thin;
+    }
+    select, option {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #c0c0c0;
+    }
+    select:focus {
+      box-shadow: 0 0 10px #c0c0c0;
+    }
+    select::-webkit-scrollbar, option::-webkit-scrollbar {
+      width: 10px;
+      background: #000;
+    }
+    select::-webkit-scrollbar-thumb, option::-webkit-scrollbar-thumb {
+      background: #222;
+      border-radius: 8px;
+    }
+    select::-webkit-scrollbar-track, option::-webkit-scrollbar-track {
+      background: #000;
+    }
+    select, option, html {
+      scrollbar-color: #222 #000;
+      scrollbar-width: thin;
+    }
+  </style>
+</head>
+<body>
+  <a href="admin-dashboard.html" class="back-button">← Back to Dashboard</a>
+  <div class="container">
+    <h1>Set Timetable</h1>
+    <div class="section">
+      <form id="timetableForm" autocomplete="off">
+        <div class="form-group">
+          <label class="form-label">Select User</label>
+          <select class="form-select" id="userSelect" required>
+            <option value="">Select</option>
+            <!-- User options will be populated by JS -->
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assign Shifts</label>
+          <table class="timetable-table">
+            <thead>
+              <tr>
+                <th>Day</th>
+                <th>Shift</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Monday</td><td><select class="form-select" name="monday"><option>Morning</option><option>Evening</option><option>Night</option><option>Off</option></select></td></tr>
+              <tr><td>Tuesday</td><td><select class="form-select" name="tuesday"><option>Morning</option><option>Evening</option><option>Night</option><option>Off</option></select></td></tr>
+              <tr><td>Wednesday</td><td><select class="form-select" name="wednesday"><option>Morning</option><option>Evening</option><option>Night</option><option>Off</option></select></td></tr>
+              <tr><td>Thursday</td><td><select class="form-select" name="thursday"><option>Morning</option><option>Evening</option><option>Night</option><option>Off</option></select></td></tr>
+              <tr><td>Friday</td><td><select class="form-select" name="friday"><option>Morning</option><option>Evening</option><option>Night</option><option>Off</option></select></td></tr>
+              <tr><td>Saturday</td><td><select class="form-select" name="saturday"><option>Morning</option><option>Evening</option><option>Night</option><option>Off</option></select></td></tr>
+              <tr><td>Sunday</td><td><select class="form-select" name="sunday"><option>Morning</option><option>Evening</option><option>Night</option><option>Off</option></select></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="form-group" id="dutyCallGroup" style="display:none;">
+          <label class="form-label">Duty Call Day</label>
+          <select class="form-select" id="dutyCallDay">
+            <option value="">Select</option>
+            <option>Monday</option>
+            <option>Tuesday</option>
+            <option>Wednesday</option>
+            <option>Thursday</option>
+            <option>Friday</option>
+            <option>Saturday</option>
+            <option>Sunday</option>
+          </select>
+        </div>
+        <div id="formMsg"></div>
+        <button type="submit" class="neon-button">Save Timetable</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    // Populate user dropdown from localStorage
+    function populateUserDropdown() {
+      const userSelect = document.getElementById('userSelect');
+      // Remove all except the first option
+      userSelect.innerHTML = '<option value="">Select</option>';
+      const users = (JSON.parse(localStorage.getItem('users')) || []).filter(u => u && u.id && u.name && u.surname && u.role);
+      users.forEach(u => {
+        const opt = document.createElement('option');
+        opt.value = u.id;
+        opt.textContent = `${u.name} ${u.surname} (${u.role})`;
+        userSelect.appendChild(opt);
+      });
+    }
+    populateUserDropdown();
+    // Show/hide duty call for doctor/nurse
+    const userSelect = document.getElementById('userSelect');
+    const dutyCallGroup = document.getElementById('dutyCallGroup');
+    userSelect.addEventListener('change', function() {
+      // Find selected user
+      const users = (JSON.parse(localStorage.getItem('users')) || []).filter(u => u && u.id && u.name && u.surname && u.role);
+      const selected = users.find(u => u.id === this.value);
+      if (selected && (selected.role === 'Doctor' || selected.role === 'Nurse')) {
+        dutyCallGroup.style.display = '';
+      } else {
+        dutyCallGroup.style.display = 'none';
+      }
+    });
+    // Dummy validation
+    document.getElementById('timetableForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (!userSelect.value) {
+        document.getElementById('formMsg').innerHTML = `<div class='error-msg'>Please select a user.</div>`;
+        return;
+      }
+      document.getElementById('formMsg').innerHTML = `<div class='success-msg'>Timetable saved! (Demo only)</div>`;
+      this.reset();
+      dutyCallGroup.style.display = 'none';
+    });
+  </script>
+</body>
+</html>

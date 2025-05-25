@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital Reports - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 120px 20px 60px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .report-container {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 15px rgba(192,192,192,0.5);
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .stat-label {
+      color: #c0c0c0;
+      font-size: 1rem;
+    }
+    .chart-container {
+      background: rgba(0, 0, 0, 0.6);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .chart-title {
+      font-size: 1.25rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      text-align: center;
+      color: #c0c0c0;
+    }
+    .neon-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .date-range {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .date-input {
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+    }
+    .date-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+  </style>
+</head>
+<body>
+  <a href="hospital-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1>Hospital Reports</h1>
+
+    <div class="report-container">
+      <div class="date-range">
+        <input type="date" class="date-input" id="startDate">
+        <input type="date" class="date-input" id="endDate">
+        <button class="filter-button" onclick="updateReports()">Apply Date Range</button>
+      </div>
+
+      <div class="filters">
+        <button class="filter-button active" data-period="day">Today</button>
+        <button class="filter-button" data-period="week">This Week</button>
+        <button class="filter-button" data-period="month">This Month</button>
+        <button class="filter-button" data-period="year">This Year</button>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="totalPatients">0</div>
+          <div class="stat-label">Total Patients</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="activePatients">0</div>
+          <div class="stat-label">Active Patients</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="emergencyCases">0</div>
+          <div class="stat-label">Emergency Cases</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="totalRevenue">$0</div>
+          <div class="stat-label">Total Revenue</div>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="chart-container">
+          <div class="chart-title">Patient Admissions</div>
+          <canvas id="admissionsChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">Revenue Distribution</div>
+          <canvas id="revenueChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">Bed Occupancy Rate</div>
+          <canvas id="occupancyChart"></canvas>
+        </div>
+        <div class="chart-container">
+          <div class="chart-title">Emergency Cases by Type</div>
+          <canvas id="emergencyChart"></canvas>
+        </div>
+      </div>
+
+      <button class="neon-button mt-6" onclick="downloadReport()">Download Report</button>
+    </div>
+  </div>
+
+  <script>
+    // Initialize date inputs
+    function initializeDates() {
+      const today = new Date();
+      const startDate = document.getElementById('startDate');
+      const endDate = document.getElementById('endDate');
+      
+      startDate.value = today.toISOString().split('T')[0];
+      endDate.value = today.toISOString().split('T')[0];
+      
+      startDate.max = today.toISOString().split('T')[0];
+      endDate.max = today.toISOString().split('T')[0];
+    }
+
+    // Update statistics based on date range
+    function updateStats(startDate, endDate) {
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const beds = JSON.parse(localStorage.getItem('beds')) || [];
+      const emergencyCases = JSON.parse(localStorage.getItem('emergencyCases')) || [];
+      const bills = JSON.parse(localStorage.getItem('hospitalBills')) || [];
+
+      // Filter data by date range
+      const filteredPatients = patients.filter(patient => {
+        const registrationDate = new Date(patient.registrationDate);
+        return registrationDate >= startDate && registrationDate <= endDate;
+      });
+
+      const filteredEmergencyCases = emergencyCases.filter(case_ => {
+        const caseDate = new Date(case_.registrationDate);
+        return caseDate >= startDate && caseDate <= endDate;
+      });
+
+      const filteredBills = bills.filter(bill => {
+        const billDate = new Date(bill.createdAt);
+        return billDate >= startDate && billDate <= endDate;
+      });
+
+      // Update statistics
+      document.getElementById('totalPatients').textContent = filteredPatients.length;
+      document.getElementById('activePatients').textContent = beds.filter(bed => bed.isOccupied).length;
+      document.getElementById('emergencyCases').textContent = filteredEmergencyCases.length;
+
+      const totalRevenue = filteredBills.reduce((sum, bill) => {
+        const totalPaid = bill.payments.reduce((paidSum, payment) => paidSum + payment.amount, 0);
+        return sum + totalPaid;
+      }, 0);
+
+      document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toFixed(2);
+
+      // Update charts
+      updateAdmissionsChart(filteredPatients);
+      updateRevenueChart(filteredBills);
+      updateOccupancyChart(beds);
+      updateEmergencyChart(filteredEmergencyCases);
+    }
+
+    // Update Admissions Chart
+    function updateAdmissionsChart(patients) {
+      const ctx = document.getElementById('admissionsChart').getContext('2d');
+      
+      // Group patients by date
+      const admissionsByDate = {};
+      patients.forEach(patient => {
+        const date = new Date(patient.registrationDate).toLocaleDateString();
+        admissionsByDate[date] = (admissionsByDate[date] || 0) + 1;
+      });
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Object.keys(admissionsByDate),
+          datasets: [{
+            label: 'Patient Admissions',
+            data: Object.values(admissionsByDate),
+            borderColor: '#c0c0c0',
+            tension: 0.4,
+            fill: false
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(192, 192, 192, 0.1)'
+              },
+              ticks: {
+                color: '#c0c0c0'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(192, 192, 192, 0.1)'
+              },
+              ticks: {
+                color: '#c0c0c0'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#c0c0c0'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Update Revenue Chart
+    function updateRevenueChart(bills) {
+      const ctx = document.getElementById('revenueChart').getContext('2d');
+      
+      // Group revenue by service type
+      const revenueByService = {};
+      bills.forEach(bill => {
+        revenueByService[bill.serviceType] = (revenueByService[bill.serviceType] || 0) + 
+          bill.payments.reduce((sum, payment) => sum + payment.amount, 0);
+      });
+
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: Object.keys(revenueByService),
+          datasets: [{
+            data: Object.values(revenueByService),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 206, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)',
+              'rgba(153, 102, 255, 0.8)',
+              'rgba(255, 159, 64, 0.8)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                color: '#c0c0c0'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Update Occupancy Chart
+    function updateOccupancyChart(beds) {
+      const ctx = document.getElementById('occupancyChart').getContext('2d');
+      
+      // Calculate occupancy by ward
+      const occupancyByWard = {};
+      beds.forEach(bed => {
+        if (!occupancyByWard[bed.ward]) {
+          occupancyByWard[bed.ward] = { total: 0, occupied: 0 };
+        }
+        occupancyByWard[bed.ward].total++;
+        if (bed.isOccupied) {
+          occupancyByWard[bed.ward].occupied++;
+        }
+      });
+
+      const occupancyRates = Object.entries(occupancyByWard).map(([ward, data]) => ({
+        ward,
+        rate: (data.occupied / data.total) * 100
+      }));
+
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: occupancyRates.map(item => item.ward),
+          datasets: [{
+            label: 'Occupancy Rate (%)',
+            data: occupancyRates.map(item => item.rate),
+            backgroundColor: 'rgba(192, 192, 192, 0.5)',
+            borderColor: '#c0c0c0',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: {
+                color: 'rgba(192, 192, 192, 0.1)'
+              },
+              ticks: {
+                color: '#c0c0c0'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(192, 192, 192, 0.1)'
+              },
+              ticks: {
+                color: '#c0c0c0'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: '#c0c0c0'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Update Emergency Chart
+    function updateEmergencyChart(emergencyCases) {
+      const ctx = document.getElementById('emergencyChart').getContext('2d');
+      
+      // Group emergency cases by type
+      const casesByType = {};
+      emergencyCases.forEach(case_ => {
+        casesByType[case_.type] = (casesByType[case_.type] || 0) + 1;
+      });
+
+      new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: Object.keys(casesByType),
+          datasets: [{
+            data: Object.values(casesByType),
+            backgroundColor: [
+              'rgba(255, 99, 132, 0.8)',
+              'rgba(54, 162, 235, 0.8)',
+              'rgba(255, 206, 86, 0.8)',
+              'rgba(75, 192, 192, 0.8)'
+            ]
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'right',
+              labels: {
+                color: '#c0c0c0'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Update reports based on selected date range
+    function updateReports() {
+      const startDate = new Date(document.getElementById('startDate').value);
+      const endDate = new Date(document.getElementById('endDate').value);
+      endDate.setHours(23, 59, 59, 999); // Include the entire end date
+
+      updateStats(startDate, endDate);
+    }
+
+    // Handle period filter clicks
+    document.querySelectorAll('.filter-button[data-period]').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.filter-button[data-period]').forEach(btn => 
+          btn.classList.remove('active')
+        );
+        button.classList.add('active');
+
+        const today = new Date();
+        let startDate = new Date();
+
+        switch(button.dataset.period) {
+          case 'day':
+            startDate = today;
+            break;
+          case 'week':
+            startDate.setDate(today.getDate() - 7);
+            break;
+          case 'month':
+            startDate.setMonth(today.getMonth() - 1);
+            break;
+          case 'year':
+            startDate.setFullYear(today.getFullYear() - 1);
+            break;
+        }
+
+        document.getElementById('startDate').value = startDate.toISOString().split('T')[0];
+        document.getElementById('endDate').value = today.toISOString().split('T')[0];
+        updateReports();
+      });
+    });
+
+    // Download report
+    function downloadReport() {
+      const startDate = document.getElementById('startDate').value;
+      const endDate = document.getElementById('endDate').value;
+      
+      const stats = {
+        totalPatients: document.getElementById('totalPatients').textContent,
+        activePatients: document.getElementById('activePatients').textContent,
+        emergencyCases: document.getElementById('emergencyCases').textContent,
+        totalRevenue: document.getElementById('totalRevenue').textContent
+      };
+
+      const reportContent = `
+Hospital Report
+Date Range: ${startDate} to ${endDate}
+
+Statistics:
+- Total Patients: ${stats.totalPatients}
+- Active Patients: ${stats.activePatients}
+- Emergency Cases: ${stats.emergencyCases}
+- Total Revenue: ${stats.totalRevenue}
+      `;
+
+      const blob = new Blob([reportContent], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `hospital-report-${startDate}-to-${endDate}.txt`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+
+    // Initialize
+    initializeDates();
+    updateReports();
+  </script>
+</body>
+</html> 

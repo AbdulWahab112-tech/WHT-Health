@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register Patient - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .registration-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      padding-top: 120px;
+    }
+    .form-container {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      backdrop-filter: blur(5px);
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2rem;
+    }
+    .form-section {
+      margin-bottom: 2rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 1rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    /* Add styles for date/time inputs */
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    select {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 8px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator,
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  </style>
+</head>
+<body>
+  <a href="polyclinic-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="registration-container">
+    <h1 class="gradient-text animate-title text-center">REGISTER NEW PATIENT</h1>
+
+    <form id="registration-form" class="form-container">
+      <div class="form-grid">
+        <!-- Personal Information -->
+        <div class="form-section">
+          <h2 class="gradient-text text-xl mb-4">Personal Information</h2>
+          
+          <div class="form-group">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" id="firstName" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" id="lastName" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="dateOfBirth" class="form-label">Date of Birth</label>
+            <input type="date" id="dateOfBirth" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="gender" class="form-label">Gender</label>
+            <select id="gender" class="form-input" required>
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Contact Information -->
+        <div class="form-section">
+          <h2 class="gradient-text text-xl mb-4">Contact Information</h2>
+          
+          <div class="form-group">
+            <label for="email" class="form-label">Email</label>
+            <input type="email" id="email" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="phone" class="form-label">Phone Number</label>
+            <input type="tel" id="phone" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="address" class="form-label">Address</label>
+            <textarea id="address" class="form-input" rows="3" required></textarea>
+          </div>
+        </div>
+
+        <!-- Medical Information -->
+        <div class="form-section">
+          <h2 class="gradient-text text-xl mb-4">Medical Information</h2>
+          
+          <div class="form-group">
+            <label for="bloodGroup" class="form-label">Blood Group</label>
+            <select id="bloodGroup" class="form-input" required>
+              <option value="">Select blood group</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="allergies" class="form-label">Allergies</label>
+            <textarea id="allergies" class="form-input" rows="2"></textarea>
+          </div>
+
+          <div class="form-group">
+            <label for="medicalHistory" class="form-label">Medical History</label>
+            <textarea id="medicalHistory" class="form-input" rows="3"></textarea>
+          </div>
+        </div>
+
+        <!-- Emergency Contact -->
+        <div class="form-section">
+          <h2 class="gradient-text text-xl mb-4">Emergency Contact</h2>
+          
+          <div class="form-group">
+            <label for="emergencyName" class="form-label">Contact Name</label>
+            <input type="text" id="emergencyName" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="emergencyPhone" class="form-label">Contact Phone</label>
+            <input type="tel" id="emergencyPhone" class="form-input" required>
+          </div>
+
+          <div class="form-group">
+            <label for="emergencyRelation" class="form-label">Relationship</label>
+            <input type="text" id="emergencyRelation" class="form-input" required>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="neon-button">Register Patient</button>
+    </form>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    // Generate unique patient ID
+    function generatePatientId() {
+      const timestamp = Date.now().toString();
+      const random = Math.random().toString(36).substring(2, 8);
+      return `P${timestamp.slice(-6)}${random.toUpperCase()}`;
+    }
+
+    // Form submission
+    document.getElementById('registration-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const patientId = generatePatientId();
+      const patient = {
+        id: patientId,
+        firstName: document.getElementById('firstName').value,
+        lastName: document.getElementById('lastName').value,
+        dateOfBirth: document.getElementById('dateOfBirth').value,
+        gender: document.getElementById('gender').value,
+        email: document.getElementById('email').value,
+        phone: document.getElementById('phone').value,
+        address: document.getElementById('address').value,
+        bloodGroup: document.getElementById('bloodGroup').value,
+        allergies: document.getElementById('allergies').value,
+        medicalHistory: document.getElementById('medicalHistory').value,
+        emergencyContact: {
+          name: document.getElementById('emergencyName').value,
+          phone: document.getElementById('emergencyPhone').value,
+          relation: document.getElementById('emergencyRelation').value
+        },
+        registrationDate: new Date().toISOString(),
+        status: 'active'
+      };
+
+      // Save to localStorage
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      patients.push(patient);
+      localStorage.setItem('patients', JSON.stringify(patients));
+
+      // Show success message
+      alert(`Patient registered successfully!\nPatient ID: ${patientId}`);
+      this.reset();
+    });
+
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".form-container", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+
+    gsap.from(".form-section", {
+      opacity: 0,
+      x: -30,
+      duration: 0.8,
+      delay: 0.5,
+      stagger: 0.2,
+      ease: "power3.out"
+    });
+  </script>
+</body>
+</html> 

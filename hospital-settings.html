@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital Settings - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 120px 20px 60px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .settings-container {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    .settings-section {
+      margin-bottom: 2rem;
+    }
+    .settings-section:last-child {
+      margin-bottom: 0;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #c0c0c0;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .form-select {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23ffffff' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 1rem center;
+      padding-right: 2.5rem;
+    }
+    .form-select:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .form-checkbox {
+      width: 1.25rem;
+      height: 1.25rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 4px;
+      appearance: none;
+      cursor: pointer;
+      position: relative;
+    }
+    .form-checkbox:checked {
+      background: #c0c0c0;
+    }
+    .form-checkbox:checked::after {
+      content: '✓';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: #000;
+      font-size: 0.875rem;
+    }
+    .form-checkbox:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .neon-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .grid-cols-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    @media (max-width: 640px) {
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+    }
+    .success-message {
+      background: rgba(0, 200, 81, 0.2);
+      border: 1px solid #00C851;
+      color: #00C851;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+    .error-message {
+      background: rgba(255, 68, 68, 0.2);
+      border: 1px solid #ff4444;
+      color: #ff4444;
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <a href="hospital-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1>Hospital Settings</h1>
+
+    <div class="settings-container">
+      <div id="successMessage" class="success-message">
+        Settings saved successfully!
+      </div>
+      <div id="errorMessage" class="error-message">
+        Error saving settings. Please try again.
+      </div>
+
+      <form id="settingsForm">
+        <!-- Hospital Information -->
+        <div class="settings-section">
+          <h2 class="section-title">Hospital Information</h2>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label class="form-label">Hospital Name</label>
+              <input type="text" class="form-input" id="hospitalName" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Contact Number</label>
+              <input type="tel" class="form-input" id="contactNumber" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email Address</label>
+              <input type="email" class="form-input" id="emailAddress" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Address</label>
+              <input type="text" class="form-input" id="address" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ward Configuration -->
+        <div class="settings-section">
+          <h2 class="section-title">Ward Configuration</h2>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label class="form-label">General Ward Capacity</label>
+              <input type="number" class="form-input" id="generalWardCapacity" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">ICU Capacity</label>
+              <input type="number" class="form-input" id="icuCapacity" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Emergency Ward Capacity</label>
+              <input type="number" class="form-input" id="emergencyWardCapacity" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Default Ward</label>
+              <select class="form-select" id="defaultWard" required>
+                <option value="general">General Ward</option>
+                <option value="icu">ICU</option>
+                <option value="emergency">Emergency Ward</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Billing Settings -->
+        <div class="settings-section">
+          <h2 class="section-title">Billing Settings</h2>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label class="form-label">Currency</label>
+              <select class="form-select" id="currency" required>
+                <option value="USD">USD ($)</option>
+                <option value="EUR">EUR (€)</option>
+                <option value="GBP">GBP (£)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Default Payment Terms (Days)</label>
+              <input type="number" class="form-input" id="paymentTerms" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Tax Rate (%)</label>
+              <input type="number" class="form-input" id="taxRate" min="0" max="100" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Late Payment Fee (%)</label>
+              <input type="number" class="form-input" id="lateFee" min="0" max="100" step="0.01" required>
+            </div>
+          </div>
+        </div>
+
+        <!-- Notification Settings -->
+        <div class="settings-section">
+          <h2 class="section-title">Notification Settings</h2>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label class="form-label">Email Notifications</label>
+              <div class="checkbox-group">
+                <input type="checkbox" class="form-checkbox" id="emailNewPatient">
+                <label>New Patient Registration</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" class="form-checkbox" id="emailEmergency">
+                <label>Emergency Cases</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" class="form-checkbox" id="emailBilling">
+                <label>Billing Updates</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">SMS Notifications</label>
+              <div class="checkbox-group">
+                <input type="checkbox" class="form-checkbox" id="smsNewPatient">
+                <label>New Patient Registration</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" class="form-checkbox" id="smsEmergency">
+                <label>Emergency Cases</label>
+              </div>
+              <div class="checkbox-group">
+                <input type="checkbox" class="form-checkbox" id="smsBilling">
+                <label>Billing Updates</label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- System Settings -->
+        <div class="settings-section">
+          <h2 class="section-title">System Settings</h2>
+          <div class="grid-cols-2">
+            <div class="form-group">
+              <label class="form-label">Auto-logout Time (minutes)</label>
+              <input type="number" class="form-input" id="autoLogout" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Data Retention Period (months)</label>
+              <input type="number" class="form-input" id="dataRetention" min="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Theme</label>
+              <select class="form-select" id="theme" required>
+                <option value="dark">Dark Theme</option>
+                <option value="light">Light Theme</option>
+                <option value="auto">Auto (System)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Language</label>
+              <select class="form-select" id="language" required>
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="neon-button">Save Settings</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Load settings from localStorage
+    function loadSettings() {
+      const settings = JSON.parse(localStorage.getItem('hospitalSettings')) || getDefaultSettings();
+      
+      // Hospital Information
+      document.getElementById('hospitalName').value = settings.hospitalInfo.name;
+      document.getElementById('contactNumber').value = settings.hospitalInfo.contact;
+      document.getElementById('emailAddress').value = settings.hospitalInfo.email;
+      document.getElementById('address').value = settings.hospitalInfo.address;
+
+      // Ward Configuration
+      document.getElementById('generalWardCapacity').value = settings.wards.general;
+      document.getElementById('icuCapacity').value = settings.wards.icu;
+      document.getElementById('emergencyWardCapacity').value = settings.wards.emergency;
+      document.getElementById('defaultWard').value = settings.wards.default;
+
+      // Billing Settings
+      document.getElementById('currency').value = settings.billing.currency;
+      document.getElementById('paymentTerms').value = settings.billing.terms;
+      document.getElementById('taxRate').value = settings.billing.taxRate;
+      document.getElementById('lateFee').value = settings.billing.lateFee;
+
+      // Notification Settings
+      document.getElementById('emailNewPatient').checked = settings.notifications.email.newPatient;
+      document.getElementById('emailEmergency').checked = settings.notifications.email.emergency;
+      document.getElementById('emailBilling').checked = settings.notifications.email.billing;
+      document.getElementById('smsNewPatient').checked = settings.notifications.sms.newPatient;
+      document.getElementById('smsEmergency').checked = settings.notifications.sms.emergency;
+      document.getElementById('smsBilling').checked = settings.notifications.sms.billing;
+
+      // System Settings
+      document.getElementById('autoLogout').value = settings.system.autoLogout;
+      document.getElementById('dataRetention').value = settings.system.dataRetention;
+      document.getElementById('theme').value = settings.system.theme;
+      document.getElementById('language').value = settings.system.language;
+    }
+
+    // Get default settings
+    function getDefaultSettings() {
+      return {
+        hospitalInfo: {
+          name: 'WHT Health Hospital',
+          contact: '',
+          email: '',
+          address: ''
+        },
+        wards: {
+          general: 50,
+          icu: 10,
+          emergency: 15,
+          default: 'general'
+        },
+        billing: {
+          currency: 'USD',
+          terms: 30,
+          taxRate: 10,
+          lateFee: 5
+        },
+        notifications: {
+          email: {
+            newPatient: true,
+            emergency: true,
+            billing: true
+          },
+          sms: {
+            newPatient: false,
+            emergency: true,
+            billing: false
+          }
+        },
+        system: {
+          autoLogout: 30,
+          dataRetention: 12,
+          theme: 'dark',
+          language: 'en'
+        }
+      };
+    }
+
+    // Save settings
+    function saveSettings(e) {
+      e.preventDefault();
+
+      const settings = {
+        hospitalInfo: {
+          name: document.getElementById('hospitalName').value,
+          contact: document.getElementById('contactNumber').value,
+          email: document.getElementById('emailAddress').value,
+          address: document.getElementById('address').value
+        },
+        wards: {
+          general: parseInt(document.getElementById('generalWardCapacity').value),
+          icu: parseInt(document.getElementById('icuCapacity').value),
+          emergency: parseInt(document.getElementById('emergencyWardCapacity').value),
+          default: document.getElementById('defaultWard').value
+        },
+        billing: {
+          currency: document.getElementById('currency').value,
+          terms: parseInt(document.getElementById('paymentTerms').value),
+          taxRate: parseFloat(document.getElementById('taxRate').value),
+          lateFee: parseFloat(document.getElementById('lateFee').value)
+        },
+        notifications: {
+          email: {
+            newPatient: document.getElementById('emailNewPatient').checked,
+            emergency: document.getElementById('emailEmergency').checked,
+            billing: document.getElementById('emailBilling').checked
+          },
+          sms: {
+            newPatient: document.getElementById('smsNewPatient').checked,
+            emergency: document.getElementById('smsEmergency').checked,
+            billing: document.getElementById('smsBilling').checked
+          }
+        },
+        system: {
+          autoLogout: parseInt(document.getElementById('autoLogout').value),
+          dataRetention: parseInt(document.getElementById('dataRetention').value),
+          theme: document.getElementById('theme').value,
+          language: document.getElementById('language').value
+        }
+      };
+
+      try {
+        localStorage.setItem('hospitalSettings', JSON.stringify(settings));
+        showMessage('success');
+      } catch (error) {
+        showMessage('error');
+        console.error('Error saving settings:', error);
+      }
+    }
+
+    // Show success/error message
+    function showMessage(type) {
+      const successMsg = document.getElementById('successMessage');
+      const errorMsg = document.getElementById('errorMessage');
+
+      if (type === 'success') {
+        successMsg.style.display = 'block';
+        errorMsg.style.display = 'none';
+      } else {
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'block';
+      }
+
+      // Hide message after 3 seconds
+      setTimeout(() => {
+        successMsg.style.display = 'none';
+        errorMsg.style.display = 'none';
+      }, 3000);
+    }
+
+    // Event listeners
+    document.getElementById('settingsForm').addEventListener('submit', saveSettings);
+
+    // Initialize
+    loadSettings();
+  </script>
+</body>
+</html> 

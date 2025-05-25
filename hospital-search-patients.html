@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Patients - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 120px 20px 60px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .search-container {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(10px);
+    }
+    .search-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .filters {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-button {
+      padding: 0.5rem 1rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 15px rgba(192,192,192,0.5);
+    }
+    .patient-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+    }
+    .patient-card {
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.3s ease;
+    }
+    .patient-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px rgba(192,192,192,0.3);
+    }
+    .neon-button {
+      width: 100%;
+      padding: 0.75rem;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: bold;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 0.5rem;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    .modal.active {
+      display: flex;
+    }
+    .modal-content {
+      background: rgba(0, 0, 0, 0.9);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 800px;
+      width: 90%;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+    .modal-content::-webkit-scrollbar {
+      width: 8px;
+    }
+    .modal-content::-webkit-scrollbar-track {
+      background: rgba(192,192,192,0.1);
+      border-radius: 4px;
+    }
+    .modal-content::-webkit-scrollbar-thumb {
+      background: #c0c0c0;
+      border-radius: 4px;
+    }
+    .info-group {
+      margin-bottom: 1.5rem;
+    }
+    .info-label {
+      color: #c0c0c0;
+      font-size: 0.875rem;
+      margin-bottom: 0.25rem;
+    }
+    .info-value {
+      color: #fff;
+      font-size: 1rem;
+    }
+    .no-results {
+      text-align: center;
+      padding: 2rem;
+      background: rgba(0, 0, 0, 0.8);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+    }
+  </style>
+</head>
+<body>
+  <a href="hospital-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="container">
+    <h1>Search Patients</h1>
+
+    <div class="search-container">
+      <input type="text" class="search-input" id="searchInput" placeholder="Search by name, ID, phone number...">
+      
+      <div class="filters">
+        <button class="filter-button active" data-filter="all">All Patients</button>
+        <button class="filter-button" data-filter="recent">Recently Added</button>
+        <button class="filter-button" data-filter="hospitalized">Currently Hospitalized</button>
+        <button class="filter-button" data-filter="emergency">Emergency Cases</button>
+      </div>
+    </div>
+
+    <div class="patient-list" id="patientList">
+      <!-- Patient cards will be dynamically added here -->
+    </div>
+  </div>
+
+  <!-- Patient Details Modal -->
+  <div class="modal" id="patientModal">
+    <div class="modal-content">
+      <h2 class="text-2xl font-bold mb-4 gradient-text">Patient Details</h2>
+      <div id="patientDetails">
+        <!-- Patient details will be dynamically added here -->
+      </div>
+      <button class="neon-button" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+
+  <script>
+    // Load and display patients
+    function loadPatients(filter = 'all', searchTerm = '') {
+      const patientList = document.getElementById('patientList');
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const beds = JSON.parse(localStorage.getItem('beds')) || [];
+      const emergencyCases = JSON.parse(localStorage.getItem('emergencyCases')) || [];
+      
+      // Filter patients
+      let filteredPatients = patients;
+      
+      switch(filter) {
+        case 'recent':
+          // Show patients added in the last 7 days
+          const weekAgo = new Date();
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          filteredPatients = patients.filter(patient => 
+            new Date(patient.registrationDate) >= weekAgo
+          );
+          break;
+        case 'hospitalized':
+          // Show currently hospitalized patients
+          const hospitalizedIds = beds
+            .filter(bed => bed.isOccupied)
+            .map(bed => bed.patient.name);
+          filteredPatients = patients.filter(patient => 
+            hospitalizedIds.includes(`${patient.firstName} ${patient.lastName}`)
+          );
+          break;
+        case 'emergency':
+          // Show emergency cases
+          const emergencyIds = emergencyCases
+            .filter(case_ => case_.status === 'active')
+            .map(case_ => case_.patientName);
+          filteredPatients = patients.filter(patient => 
+            emergencyIds.includes(`${patient.firstName} ${patient.lastName}`)
+          );
+          break;
+      }
+
+      if (searchTerm) {
+        const term = searchTerm.toLowerCase();
+        filteredPatients = filteredPatients.filter(patient => 
+          patient.firstName.toLowerCase().includes(term) ||
+          patient.lastName.toLowerCase().includes(term) ||
+          patient.id.toLowerCase().includes(term) ||
+          patient.phone.includes(term)
+        );
+      }
+
+      // Sort by registration date (newest first)
+      filteredPatients.sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate));
+
+      // Clear current list
+      patientList.innerHTML = '';
+
+      if (filteredPatients.length === 0) {
+        patientList.innerHTML = `
+          <div class="no-results">
+            <h2 class="text-xl mb-2">No Patients Found</h2>
+            <p>No patients match your current search criteria</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Display patients
+      filteredPatients.forEach(patient => {
+        const card = document.createElement('div');
+        card.className = 'patient-card';
+        
+        const registrationDate = new Date(patient.registrationDate).toLocaleDateString();
+        
+        card.innerHTML = `
+          <h3 class="text-xl font-bold mb-2">${patient.firstName} ${patient.lastName}</h3>
+          <p class="mb-2">ID: ${patient.id}</p>
+          <p class="mb-2">Gender: ${patient.gender}</p>
+          <p class="mb-2">Phone: ${patient.phone}</p>
+          <p class="mb-4">Registered: ${registrationDate}</p>
+          <button class="neon-button" onclick="viewPatientDetails('${patient.id}')">
+            View Details
+          </button>
+        `;
+        
+        patientList.appendChild(card);
+      });
+    }
+
+    // View patient details
+    function viewPatientDetails(patientId) {
+      const patients = JSON.parse(localStorage.getItem('patients')) || [];
+      const patient = patients.find(p => p.id === patientId);
+      
+      if (patient) {
+        const details = document.getElementById('patientDetails');
+        const dob = new Date(patient.dateOfBirth);
+        const age = Math.floor((new Date() - dob) / (1000 * 60 * 60 * 24 * 365.25));
+        
+        details.innerHTML = `
+          <div class="grid grid-cols-2 gap-4">
+            <!-- Personal Information -->
+            <div class="info-group">
+              <div class="info-label">Full Name</div>
+              <div class="info-value">${patient.firstName} ${patient.lastName}</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Patient ID</div>
+              <div class="info-value">${patient.id}</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Date of Birth</div>
+              <div class="info-value">${patient.dateOfBirth} (${age} years)</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Gender</div>
+              <div class="info-value">${patient.gender}</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Blood Type</div>
+              <div class="info-value">${patient.bloodType}</div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="info-group col-span-2">
+              <div class="info-label">Address</div>
+              <div class="info-value">${patient.address}</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Phone Number</div>
+              <div class="info-value">${patient.phone}</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Email</div>
+              <div class="info-value">${patient.email || 'Not provided'}</div>
+            </div>
+
+            <!-- Emergency Contact -->
+            <div class="info-group">
+              <div class="info-label">Emergency Contact</div>
+              <div class="info-value">${patient.emergencyContact.name}</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Relationship</div>
+              <div class="info-value">${patient.emergencyContact.relationship}</div>
+            </div>
+            <div class="info-group">
+              <div class="info-label">Emergency Phone</div>
+              <div class="info-value">${patient.emergencyContact.phone}</div>
+            </div>
+
+            <!-- Medical Information -->
+            <div class="info-group col-span-2">
+              <div class="info-label">Allergies</div>
+              <div class="info-value">${patient.medical.allergies || 'None reported'}</div>
+            </div>
+            <div class="info-group col-span-2">
+              <div class="info-label">Current Medications</div>
+              <div class="info-value">${patient.medical.medications || 'None reported'}</div>
+            </div>
+            <div class="info-group col-span-2">
+              <div class="info-label">Medical History</div>
+              <div class="info-value">${patient.medical.medicalHistory || 'No history recorded'}</div>
+            </div>
+
+            <!-- Registration Info -->
+            <div class="info-group col-span-2">
+              <div class="info-label">Registration Date</div>
+              <div class="info-value">${new Date(patient.registrationDate).toLocaleString()}</div>
+            </div>
+          </div>
+        `;
+        
+        document.getElementById('patientModal').classList.add('active');
+      }
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById('patientModal').classList.remove('active');
+    }
+
+    // Filter buttons click handler
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        loadPatients(button.dataset.filter, document.getElementById('searchInput').value);
+      });
+    });
+
+    // Search input handler
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const activeFilter = document.querySelector('.filter-button.active');
+      loadPatients(activeFilter.dataset.filter, e.target.value);
+    });
+
+    // Close modal when clicking outside
+    document.getElementById('patientModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeModal();
+      }
+    });
+
+    // Initial load
+    loadPatients();
+  </script>
+</body>
+</html> 

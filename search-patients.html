@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Patients - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .search-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .search-box {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .search-input {
+      flex: 1;
+      padding: 0.75rem;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      background: transparent;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .search-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .patient-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(5px);
+    }
+    .patient-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    .modal-content {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 2rem;
+      max-width: 800px;
+      margin: 2rem auto;
+      backdrop-filter: blur(10px);
+    }
+    .close-button {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .close-button:hover {
+      color: #c0c0c0;
+      text-shadow: 0 0 10px #c0c0c0;
+    }
+    .filter-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .filter-button {
+      padding: 8px 16px;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: transparent;
+      color: #fff;
+    }
+    .filter-button.active {
+      background: rgba(192,192,192,0.3);
+      box-shadow: 0 0 10px #c0c0c0;
+    }
+    .patient-info {
+      margin: 1rem 0;
+      padding: 1rem;
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+    }
+  </style>
+</head>
+<body>
+  <a href="receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="search-container">
+    <h1 class="gradient-text animate-title">SEARCH PATIENTS</h1>
+
+    <div class="search-box">
+      <input type="text" id="searchInput" class="search-input" placeholder="Search by ID, name, phone, or email...">
+      <button class="neon-button" onclick="searchPatients()">Search</button>
+    </div>
+
+    <div class="filter-buttons">
+      <button class="filter-button active" data-filter="all">All</button>
+      <button class="filter-button" data-filter="active">Active</button>
+      <button class="filter-button" data-filter="discharged">Discharged</button>
+    </div>
+
+    <div class="results-grid" id="searchResults">
+      <!-- Results will be populated here -->
+    </div>
+  </div>
+
+  <!-- Patient Details Modal -->
+  <div id="patientModal" class="modal">
+    <div class="modal-content">
+      <span class="close-button" onclick="closeModal()">&times;</span>
+      <h2 class="gradient-text text-2xl mb-4">Patient Details</h2>
+      <div id="patientDetails">
+        <!-- Patient details will be populated here -->
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    let currentFilter = 'all';
+    const patients = JSON.parse(localStorage.getItem('patients')) || [];
+
+    function searchPatients() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      const resultsContainer = document.getElementById('searchResults');
+      resultsContainer.innerHTML = '';
+
+      const filteredPatients = patients.filter(patient => {
+        const matchesSearch = 
+          patient.id.toLowerCase().includes(searchTerm) ||
+          `${patient.firstName} ${patient.lastName}`.toLowerCase().includes(searchTerm) ||
+          patient.phone.toLowerCase().includes(searchTerm) ||
+          patient.email.toLowerCase().includes(searchTerm);
+
+        const matchesFilter = 
+          currentFilter === 'all' ||
+          (currentFilter === 'active' && patient.status === 'active') ||
+          (currentFilter === 'discharged' && patient.status === 'discharged');
+
+        return matchesSearch && matchesFilter;
+      });
+
+      if (filteredPatients.length === 0) {
+        resultsContainer.innerHTML = '<p class="text-center col-span-full">No patients found.</p>';
+        return;
+      }
+
+      filteredPatients.forEach(patient => {
+        const card = document.createElement('div');
+        card.className = 'patient-card';
+        card.innerHTML = `
+          <h3 class="gradient-text text-xl mb-2">${patient.firstName} ${patient.lastName}</h3>
+          <p><strong>ID:</strong> ${patient.id}</p>
+          <p><strong>Phone:</strong> ${patient.phone}</p>
+          <p><strong>Status:</strong> ${patient.status}</p>
+          <button class="neon-button mt-4" onclick="showPatientDetails('${patient.id}')">View Details</button>
+        `;
+        resultsContainer.appendChild(card);
+      });
+
+      // Animate new cards
+      gsap.from(".patient-card", {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: "power3.out"
+      });
+    }
+
+    function showPatientDetails(patientId) {
+      const patient = patients.find(p => p.id === patientId);
+      if (!patient) return;
+
+      const modal = document.getElementById('patientModal');
+      const detailsContainer = document.getElementById('patientDetails');
+
+      detailsContainer.innerHTML = `
+        <div class="patient-info">
+          <h3 class="gradient-text text-xl mb-2">Personal Information</h3>
+          <p><strong>Full Name:</strong> ${patient.firstName} ${patient.lastName}</p>
+          <p><strong>ID:</strong> ${patient.id}</p>
+          <p><strong>Date of Birth:</strong> ${patient.dateOfBirth}</p>
+          <p><strong>Gender:</strong> ${patient.gender}</p>
+          <p><strong>Email:</strong> ${patient.email}</p>
+          <p><strong>Phone:</strong> ${patient.phone}</p>
+          <p><strong>Address:</strong> ${patient.address}</p>
+        </div>
+
+        <div class="patient-info">
+          <h3 class="gradient-text text-xl mb-2">Medical Information</h3>
+          <p><strong>Blood Group:</strong> ${patient.bloodGroup}</p>
+          <p><strong>Allergies:</strong> ${patient.allergies || 'None'}</p>
+          <p><strong>Medical History:</strong> ${patient.medicalHistory || 'None'}</p>
+        </div>
+
+        <div class="patient-info">
+          <h3 class="gradient-text text-xl mb-2">Emergency Contact</h3>
+          <p><strong>Name:</strong> ${patient.emergencyContact.name}</p>
+          <p><strong>Phone:</strong> ${patient.emergencyContact.phone}</p>
+        </div>
+
+        <div class="patient-info">
+          <h3 class="gradient-text text-xl mb-2">Registration Details</h3>
+          <p><strong>Registration Date:</strong> ${new Date(patient.registrationDate).toLocaleDateString()}</p>
+          <p><strong>Status:</strong> ${patient.status}</p>
+        </div>
+      `;
+
+      modal.style.display = 'block';
+      
+      // Animate modal content
+      gsap.from(".modal-content", {
+        opacity: 0,
+        y: -50,
+        duration: 0.5,
+        ease: "power3.out"
+      });
+    }
+
+    function closeModal() {
+      document.getElementById('patientModal').style.display = 'none';
+    }
+
+    // Handle filter buttons
+    document.querySelectorAll('.filter-button').forEach(button => {
+      button.addEventListener('click', function() {
+        document.querySelectorAll('.filter-button').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        currentFilter = this.dataset.filter;
+        searchPatients();
+      });
+    });
+
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('patientModal');
+      if (event.target === modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    // Initial search to show all patients
+    searchPatients();
+
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".search-box", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+
+    gsap.from(".filter-buttons", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.5,
+      ease: "power3.out"
+    });
+  </script>
+</body>
+</html> 

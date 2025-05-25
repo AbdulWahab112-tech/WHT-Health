@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Manage Queue - WHT Health</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lovelo:wght@900&display=swap" rel="stylesheet">
+  <link href="form-styles.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #000;
+      background-image: url('wahab.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      opacity: 0.9;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      min-height: 100vh;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      font-family: 'Lovelo', sans-serif;
+      font-weight: 900;
+      font-size: 3.5rem;
+      line-height: 1.1;
+      margin-bottom: 2rem;
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      transition: text-shadow 0.3s ease;
+    }
+    h1:hover {
+      text-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+    }
+    .gradient-text {
+      background: linear-gradient(45deg, #c0c0c0, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      padding: 10px 20px;
+      color: #fff;
+      text-decoration: none;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .back-button:hover {
+      box-shadow: 0 0 20px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+      text-shadow: 0 0 5px #fff;
+    }
+    .queue-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+      padding-top: 80px;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 2rem;
+    }
+    .queue-form {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(5px);
+    }
+    .queue-list {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid #c0c0c0;
+      border-radius: 15px;
+      padding: 1.5rem;
+      backdrop-filter: blur(5px);
+      max-height: 700px;
+      overflow-y: auto;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      color: #fff;
+      font-weight: bold;
+    }
+    .form-input {
+      width: 100%;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.85) !important;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      color: #fff;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      box-shadow: 0 0 15px #c0c0c0;
+    }
+    select.form-input {
+      background: #000 !important;
+      color: #fff !important;
+      appearance: none;
+      padding-right: 30px;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="%23c0c0c0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+    }
+    select.form-input option {
+      background-color: #000;
+      color: #fff;
+    }
+    textarea.form-input {
+      min-height: 100px;
+      resize: vertical;
+      background: rgba(0, 0, 0, 0.85) !important;
+    }
+    .neon-button {
+      position: relative;
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      font-size: 16px;
+      font-weight: bold;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      width: 100%;
+    }
+    .neon-button:hover {
+      box-shadow: 0 0 20px #c0c0c0, 0 0 40px #c0c0c0;
+      background: rgba(192,192,192,0.1);
+    }
+    .queue-item {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+    .queue-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateX(5px);
+    }
+    .queue-item.current {
+      border: 2px solid #4CAF50;
+      background: rgba(76, 175, 80, 0.1);
+    }
+    .queue-actions {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    .action-button {
+      padding: 5px 10px;
+      border: 1px solid #c0c0c0;
+      border-radius: 4px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: transparent;
+      color: #fff;
+    }
+    .next-button { color: #4CAF50; }
+    .skip-button { color: #2196F3; }
+    .remove-button { color: #f44336; }
+    .action-button:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    .queue-stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .stat-card {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+    }
+    .stat-value {
+      font-size: 2rem;
+      font-weight: bold;
+      margin: 0.5rem 0;
+    }
+    .error-message {
+      color: #ff6666;
+      font-size: 14px;
+      margin-top: 5px;
+      display: none;
+    }
+    /* Add styles for date/time inputs */
+    input[type="date"],
+    input[type="time"],
+    input[type="datetime-local"],
+    select {
+      background-color: #000 !important;
+      color: #fff !important;
+      border: 2px solid #c0c0c0;
+      border-radius: 8px;
+      padding: 8px;
+    }
+    input[type="date"]::-webkit-calendar-picker-indicator,
+    input[type="time"]::-webkit-calendar-picker-indicator,
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+    }
+  </style>
+</head>
+<body>
+  <a href="polyclinic-receptionist-dashboard.html" class="back-button">← Back to Dashboard</a>
+
+  <div class="min-h-screen py-12 px-4">
+    <h1 class="gradient-text animate-title text-center">QUEUE MANAGEMENT</h1>
+
+    <div class="queue-container">
+      <!-- Add to Queue Form -->
+      <div class="queue-form">
+        <h2 class="gradient-text text-xl mb-4">Add to Queue</h2>
+        <form id="queue-form">
+          <div class="form-group">
+            <label for="patientId" class="form-label">Patient ID</label>
+            <input type="text" id="patientId" class="form-input" required>
+            <p class="error-message" id="patientId-error">Invalid patient ID.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="doctorId" class="form-label">Select Doctor</label>
+            <select id="doctorId" class="form-input" required>
+              <option value="">Select a doctor</option>
+            </select>
+            <p class="error-message" id="doctorId-error">Please select a doctor.</p>
+          </div>
+
+          <div class="form-group">
+            <label for="priority" class="form-label">Priority</label>
+            <select id="priority" class="form-input">
+              <option value="normal">Normal</option>
+              <option value="urgent">Urgent</option>
+              <option value="emergency">Emergency</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="notes" class="form-label">Notes</label>
+            <textarea id="notes" class="form-input" rows="3"></textarea>
+          </div>
+
+          <button type="submit" class="neon-button">Add to Queue</button>
+        </form>
+      </div>
+
+      <!-- Queue List -->
+      <div>
+        <!-- Queue Statistics -->
+        <div class="queue-stats">
+          <div class="stat-card">
+            <p class="gradient-text">In Queue</p>
+            <p class="stat-value" id="queueCount">0</p>
+          </div>
+          <div class="stat-card">
+            <p class="gradient-text">Average Wait</p>
+            <p class="stat-value" id="avgWaitTime">0m</p>
+          </div>
+          <div class="stat-card">
+            <p class="gradient-text">Completed</p>
+            <p class="stat-value" id="completedCount">0</p>
+          </div>
+        </div>
+
+        <div class="queue-list" id="queueList">
+          <!-- Queue items will be populated here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <script>
+    // Load doctors
+    const users = JSON.parse(localStorage.getItem('users')) || [];
+    const doctors = users.filter(user => user.userType === 'Doctor');
+    const doctorSelect = document.getElementById('doctorId');
+    
+    doctors.forEach(doctor => {
+      const option = document.createElement('option');
+      option.value = doctor.email;
+      option.textContent = `Dr. ${doctor.fullName} - ${doctor.specialization || 'General'}`;
+      doctorSelect.appendChild(option);
+    });
+
+    // Queue management
+    let queue = JSON.parse(localStorage.getItem('queue')) || [];
+    const patients = JSON.parse(localStorage.getItem('patients')) || [];
+    let completedToday = JSON.parse(localStorage.getItem('completedToday')) || [];
+
+    // Clear completed queue at the start of each day
+    const today = new Date().toDateString();
+    const lastClear = localStorage.getItem('lastQueueClear');
+    if (lastClear !== today) {
+      completedToday = [];
+      localStorage.setItem('completedToday', JSON.stringify(completedToday));
+      localStorage.setItem('lastQueueClear', today);
+    }
+
+    function updateQueueDisplay() {
+      const queueList = document.getElementById('queueList');
+      queueList.innerHTML = '';
+
+      queue.forEach((item, index) => {
+        const patient = patients.find(p => p.id === item.patientId);
+        const doctor = doctors.find(d => d.email === item.doctorId);
+        
+        if (!patient || !doctor) return;
+
+        const waitTime = Math.floor((Date.now() - item.addedAt) / 60000); // minutes
+        const card = document.createElement('div');
+        card.className = `queue-item ${index === 0 ? 'current' : ''}`;
+        card.innerHTML = `
+          <h3 class="gradient-text text-lg">${patient.firstName} ${patient.lastName}</h3>
+          <p><strong>Patient ID:</strong> ${patient.id}</p>
+          <p><strong>Doctor:</strong> Dr. ${doctor.fullName}</p>
+          <p><strong>Priority:</strong> ${item.priority}</p>
+          <p><strong>Wait Time:</strong> ${waitTime} minutes</p>
+          ${item.notes ? `<p><strong>Notes:</strong> ${item.notes}</p>` : ''}
+          <div class="queue-actions">
+            ${index === 0 ? `
+              <button class="action-button next-button" onclick="completeQueue('${item.id}')">Complete</button>
+              <button class="action-button skip-button" onclick="skipQueue('${item.id}')">Skip</button>
+            ` : ''}
+            <button class="action-button remove-button" onclick="removeFromQueue('${item.id}')">Remove</button>
+          </div>
+        `;
+        queueList.appendChild(card);
+      });
+
+      // Update statistics
+      document.getElementById('queueCount').textContent = queue.length;
+      document.getElementById('completedCount').textContent = completedToday.length;
+      
+      if (completedToday.length > 0) {
+        const totalWaitTime = completedToday.reduce((acc, curr) => acc + curr.waitTime, 0);
+        const avgWait = Math.floor(totalWaitTime / completedToday.length);
+        document.getElementById('avgWaitTime').textContent = `${avgWait}m`;
+      }
+
+      // Save queue state
+      localStorage.setItem('queue', JSON.stringify(queue));
+    }
+
+    // Form submission
+    document.getElementById('queue-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const patientId = document.getElementById('patientId').value.trim();
+      const doctorId = document.getElementById('doctorId').value;
+      const priority = document.getElementById('priority').value;
+      const notes = document.getElementById('notes').value.trim();
+
+      // Validate patient exists
+      const patient = patients.find(p => p.id === patientId);
+      if (!patient) {
+        document.getElementById('patientId-error').style.display = 'block';
+        return;
+      }
+
+      // Add to queue
+      const queueItem = {
+        id: Date.now().toString(),
+        patientId,
+        doctorId,
+        priority,
+        notes,
+        addedAt: Date.now()
+      };
+
+      // Insert based on priority
+      const priorityOrder = { emergency: 0, urgent: 1, normal: 2 };
+      const insertIndex = queue.findIndex(item => priorityOrder[item.priority] > priorityOrder[priority]);
+      
+      if (insertIndex === -1) {
+        queue.push(queueItem);
+      } else {
+        queue.splice(insertIndex, 0, queueItem);
+      }
+
+      updateQueueDisplay();
+      this.reset();
+
+      // Animate new addition
+      gsap.from(".queue-item:last-child", {
+        opacity: 0,
+        x: -50,
+        duration: 0.5,
+        ease: "power3.out"
+      });
+    });
+
+    function completeQueue(id) {
+      const index = queue.findIndex(item => item.id === id);
+      if (index !== -1) {
+        const completed = queue.splice(index, 1)[0];
+        completed.waitTime = Math.floor((Date.now() - completed.addedAt) / 60000);
+        completedToday.push(completed);
+        localStorage.setItem('completedToday', JSON.stringify(completedToday));
+        updateQueueDisplay();
+      }
+    }
+
+    function skipQueue(id) {
+      const index = queue.findIndex(item => item.id === id);
+      if (index !== -1) {
+        const skipped = queue.splice(index, 1)[0];
+        queue.push(skipped);
+        updateQueueDisplay();
+      }
+    }
+
+    function removeFromQueue(id) {
+      queue = queue.filter(item => item.id !== id);
+      updateQueueDisplay();
+    }
+
+    // Initial display
+    updateQueueDisplay();
+
+    // GSAP Animations
+    gsap.from(".animate-title", {
+      opacity: 0,
+      y: -50,
+      duration: 1,
+      ease: "power3.out"
+    });
+
+    gsap.from(".queue-container", {
+      opacity: 0,
+      y: 50,
+      duration: 0.8,
+      delay: 0.3,
+      ease: "power3.out"
+    });
+
+    gsap.from(".queue-stats", {
+      opacity: 0,
+      scale: 0.8,
+      duration: 0.8,
+      delay: 0.5,
+      ease: "power3.out",
+      stagger: 0.2
+    });
+  </script>
+</body>
+</html> 
